@@ -1,0 +1,4 @@
+# selecion el tipo de fichero o base datos
+#las opciones son: SQL, JSON, XML y TXT
+
+tipo=SQL
