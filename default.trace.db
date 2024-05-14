@@ -1,0 +1,419 @@
+2024-05-14 01:50:37.574000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]desc grupos"; se esperaba "DELETE, DROP"
+Syntax error in SQL statement "[*]desc grupos"; expected "DELETE, DROP"; SQL statement:
+desc grupos [42001-224]
+2024-05-14 01:50:42.254000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]desc grupos"; se esperaba "DELETE, DROP"
+Syntax error in SQL statement "[*]desc grupos"; expected "DELETE, DROP"; SQL statement:
+desc grupos [42001-224]
+2024-05-14 01:50:45.869000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]describe grupos"; se esperaba "DELETE, DROP"
+Syntax error in SQL statement "[*]describe grupos"; expected "DELETE, DROP"; SQL statement:
+describe grupos [42001-224]
+2024-05-14 01:51:03.520000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]describeGRUPOS"; se esperaba "DELETE, DROP"
+Syntax error in SQL statement "[*]describeGRUPOS"; expected "DELETE, DROP"; SQL statement:
+describeGRUPOS [42001-224]
+2024-05-14 01:51:07.371000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]describeGRUPOS"; se esperaba "DELETE, DROP"
+Syntax error in SQL statement "[*]describeGRUPOS"; expected "DELETE, DROP"; SQL statement:
+describeGRUPOS [42001-224]
+2024-05-14 01:51:14.642000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]desc grupos"; se esperaba "DELETE, DROP"
+Syntax error in SQL statement "[*]desc grupos"; expected "DELETE, DROP"; SQL statement:
+desc grupos [42001-224]
+2024-05-14 02:12:48.305000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (CTFS: ""CTFID"" INTEGER NOT NULL)"
+Data conversion error converting "'' (CTFS: ""CTFID"" INTEGER NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."CTFS"("CTFID","GRUPOID","PUNTUACION")VALUES(?,?,?) [22018-224]
+2024-05-14 02:12:48.305000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (CTFS: ""CTFID"" INTEGER NOT NULL)"
+Data conversion error converting "'' (CTFS: ""CTFID"" INTEGER NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."CTFS"("CTFID","GRUPOID","PUNTUACION")VALUES(?,?,?) [22018-224]
+2024-05-14 02:13:52.230000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT CTFID GRUPOID [*]PUNTUACION  FROM CTFS"
+Syntax error in SQL statement "SELECT CTFID GRUPOID [*]PUNTUACION  FROM CTFS"; SQL statement:
+SELECT CTFID GRUPOID PUNTUACION  FROM CTFS [42000-224]
+2024-05-14 02:13:53.020000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT CTFID GRUPOID [*]PUNTUACION  FROM CTFS"
+Syntax error in SQL statement "SELECT CTFID GRUPOID [*]PUNTUACION  FROM CTFS"; SQL statement:
+SELECT CTFID GRUPOID PUNTUACION  FROM CTFS [42000-224]
+2024-05-14 03:21:51.324000+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Columna "XD" no encontrada
+Column "XD" not found; SQL statement:
+INSERT INTO GRUPOS (GRUPODESC) VALUES (xd) [42122-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.dml.Insert.doPrepare(Insert.java:300)
+	at org.h2.command.dml.DataChangeStatement.prepare(DataChangeStatement.java:37)
+	at org.h2.command.Parser.prepareCommand(Parser.java:489)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1345)
+	at org.h2.server.web.WebApp.query(WebApp.java:1143)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1109)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1096)
+	at org.h2.server.web.WebThread.process(WebThread.java:190)
+	at org.h2.server.web.WebThread.run(WebThread.java:103)
+	at java.lang.Thread.run(Unknown Source)
+2024-05-14 03:22:45.904000+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Columna "XD" no encontrada
+Column "XD" not found; SQL statement:
+INSERT INTO GRUPOS (GRUPODESC) VALUES (xd) [42122-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.dml.Insert.doPrepare(Insert.java:300)
+	at org.h2.command.dml.DataChangeStatement.prepare(DataChangeStatement.java:37)
+	at org.h2.command.Parser.prepareCommand(Parser.java:489)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1345)
+	at org.h2.server.web.WebApp.query(WebApp.java:1143)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1109)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1096)
+	at org.h2.server.web.WebThread.process(WebThread.java:190)
+	at org.h2.server.web.WebThread.run(WebThread.java:103)
+	at java.lang.Thread.run(Unknown Source)
+2024-05-14 03:23:22.656000+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLDataException: Parametro "#1" no está fijado
+Parameter "#1" is not set; SQL statement:
+INSERT INTO GRUPOS (GRUPODESC) VALUES (?) [90012-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:658)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.Parameter.checkSet(Parameter.java:75)
+	at org.h2.command.Prepared.checkParameters(Prepared.java:207)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:159)
+	at org.h2.command.Command.executeUpdate(Command.java:256)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:262)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1345)
+	at org.h2.server.web.WebApp.query(WebApp.java:1143)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1109)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1096)
+	at org.h2.server.web.WebThread.process(WebThread.java:190)
+	at org.h2.server.web.WebThread.run(WebThread.java:103)
+	at java.lang.Thread.run(Unknown Source)
+2024-05-14 03:24:31.674000+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"
+Data conversion error converting "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"; SQL statement:
+INSERT INTO "PUBLIC"."GRUPOS"("GRUPOID","GRUPODESC","MEJORPOSCTFID")VALUES(?,?,?) [22018-224]
+2024-05-14 03:24:31.674000+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"
+Data conversion error converting "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"; SQL statement:
+INSERT INTO "PUBLIC"."GRUPOS"("GRUPOID","GRUPODESC","MEJORPOSCTFID")VALUES(?,?,?) [22018-224]
+2024-05-14 03:24:43.224000+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"
+Data conversion error converting "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"; SQL statement:
+INSERT INTO "PUBLIC"."GRUPOS"("GRUPOID","GRUPODESC","MEJORPOSCTFID")VALUES(?,?,?) [22018-224]
+2024-05-14 03:24:43.224000+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"
+Data conversion error converting "'' (GRUPOS: ""MEJORPOSCTFID"" INTEGER)"; SQL statement:
+INSERT INTO "PUBLIC"."GRUPOS"("GRUPOID","GRUPODESC","MEJORPOSCTFID")VALUES(?,?,?) [22018-224]
+2024-05-14 03:57:12.646000+02:00 jdbc[5]: null
+org.h2.message.DbException: La conexión no fue cerrada por la aplicación y esta siendo limpiada (garbage collected)
+The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.jdbc.JdbcConnection.closeOld(JdbcConnection.java:218)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:135)
+	at org.h2.util.JdbcUtils.getConnection(JdbcUtils.java:288)
+	at org.h2.server.web.WebServer.getConnection(WebServer.java:811)
+	at org.h2.server.web.WebApp.login(WebApp.java:1039)
+	at org.h2.server.web.WebApp.process(WebApp.java:227)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:177)
+	at org.h2.server.web.WebThread.process(WebThread.java:154)
+	at org.h2.server.web.WebThread.run(WebThread.java:103)
+	at java.lang.Thread.run(Unknown Source)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: La conexión no fue cerrada por la aplicación y esta siendo limpiada (garbage collected)
+The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 13 more
+2024-05-14 04:03:04.657000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT grupoid =[*]> 1 FROM CTFS"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT grupoid =[*]> 1 FROM CTFS"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT grupoid => 1 FROM CTFS [42001-224]
+2024-05-14 04:03:12.734000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT grupoid -[*]> 1 FROM CTFS"
+Syntax error in SQL statement "SELECT grupoid -[*]> 1 FROM CTFS"; SQL statement:
+SELECT grupoid -> 1 FROM CTFS [42000-224]
+2024-05-14 04:07:42.120000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT grupoid=[*]>1 FROM CTFS"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT grupoid=[*]>1 FROM CTFS"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT grupoid=>1 FROM CTFS [42001-224]
+2024-05-14 04:07:54.258000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT (grupoid=[*]>1) FROM CTFS"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT (grupoid=[*]>1) FROM CTFS"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT (grupoid=>1) FROM CTFS [42001-224]
+2024-05-14 04:07:55.160000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT (grupoid=[*]>1) FROM CTFS"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT (grupoid=[*]>1) FROM CTFS"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT (grupoid=>1) FROM CTFS [42001-224]
+2024-05-14 04:07:55.837000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT (grupoid=[*]>1) FROM CTFS"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT (grupoid=[*]>1) FROM CTFS"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT (grupoid=>1) FROM CTFS [42001-224]
+2024-05-14 04:08:19.810000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM CTFS where grupoid=[*]>1"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT * FROM CTFS where grupoid=[*]>1"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT * FROM CTFS where grupoid=>1 [42001-224]
+2024-05-14 04:08:20.591000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM CTFS where grupoid=[*]>1"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT * FROM CTFS where grupoid=[*]>1"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT * FROM CTFS where grupoid=>1 [42001-224]
+2024-05-14 04:08:21.174000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM CTFS where grupoid=[*]>1"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT * FROM CTFS where grupoid=[*]>1"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT * FROM CTFS where grupoid=>1 [42001-224]
+2024-05-14 04:08:21.631000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM CTFS where grupoid=[*]>1"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT * FROM CTFS where grupoid=[*]>1"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT * FROM CTFS where grupoid=>1 [42001-224]
+2024-05-14 04:08:22.228000+02:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM CTFS where grupoid=[*]>1"; se esperaba "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT * FROM CTFS where grupoid=[*]>1"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT * FROM CTFS where grupoid=>1 [42001-224]
+2024-05-14 04:24:00.274172+02:00 database: flush
+org.h2.message.DbException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.message.DbException.convert(DbException.java:407)
+	at org.h2.mvstore.db.Store.lambda$new$0(Store.java:122)
+	at org.h2.mvstore.MVStore.handleException(MVStore.java:1546)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:371)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:291)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:2035)
+	at org.h2.mvstore.db.Store.<init>(Store.java:133)
+	at org.h2.engine.Database.<init>(Database.java:326)
+	at org.h2.engine.Engine.openSession(Engine.java:92)
+	at org.h2.engine.Engine.openSession(Engine.java:222)
+	at org.h2.engine.Engine.createSession(Engine.java:201)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:343)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:125)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
+	at com.zaxxer.hikari.HikariDataSource.<init>(HikariDataSource.java:81)
+	at dbConnection.DataSourceFactory.getDS(DataSourceFactory.kt:25)
+	at MainKt.main(Main.kt:36)
+	at MainKt.main(Main.kt)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:566)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 25 more
+Caused by: org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]
+	at org.h2.mvstore.DataUtils.newMVStoreException(DataUtils.java:996)
+	at org.h2.mvstore.SingleFileStore.lockFileChannel(SingleFileStore.java:143)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:117)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
+	... 19 more
+2024-05-14 04:24:16.315566+02:00 database: flush
+org.h2.message.DbException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.message.DbException.convert(DbException.java:407)
+	at org.h2.mvstore.db.Store.lambda$new$0(Store.java:122)
+	at org.h2.mvstore.MVStore.handleException(MVStore.java:1546)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:371)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:291)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:2035)
+	at org.h2.mvstore.db.Store.<init>(Store.java:133)
+	at org.h2.engine.Database.<init>(Database.java:326)
+	at org.h2.engine.Engine.openSession(Engine.java:92)
+	at org.h2.engine.Engine.openSession(Engine.java:222)
+	at org.h2.engine.Engine.createSession(Engine.java:201)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:343)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:125)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
+	at com.zaxxer.hikari.HikariDataSource.<init>(HikariDataSource.java:81)
+	at dbConnection.DataSourceFactory.getDS(DataSourceFactory.kt:25)
+	at MainKt.main(Main.kt:36)
+	at MainKt.main(Main.kt)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:566)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 25 more
+Caused by: org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]
+	at org.h2.mvstore.DataUtils.newMVStoreException(DataUtils.java:996)
+	at org.h2.mvstore.SingleFileStore.lockFileChannel(SingleFileStore.java:143)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:117)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
+	... 19 more
+2024-05-14 04:24:29.891321+02:00 database: flush
+org.h2.message.DbException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.message.DbException.convert(DbException.java:407)
+	at org.h2.mvstore.db.Store.lambda$new$0(Store.java:122)
+	at org.h2.mvstore.MVStore.handleException(MVStore.java:1546)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:371)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:291)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:2035)
+	at org.h2.mvstore.db.Store.<init>(Store.java:133)
+	at org.h2.engine.Database.<init>(Database.java:326)
+	at org.h2.engine.Engine.openSession(Engine.java:92)
+	at org.h2.engine.Engine.openSession(Engine.java:222)
+	at org.h2.engine.Engine.createSession(Engine.java:201)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:343)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:125)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
+	at com.zaxxer.hikari.HikariDataSource.<init>(HikariDataSource.java:81)
+	at dbConnection.DataSourceFactory.getDS(DataSourceFactory.kt:25)
+	at MainKt.main(Main.kt:36)
+	at MainKt.main(Main.kt)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:566)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 25 more
+Caused by: org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]
+	at org.h2.mvstore.DataUtils.newMVStoreException(DataUtils.java:996)
+	at org.h2.mvstore.SingleFileStore.lockFileChannel(SingleFileStore.java:143)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:117)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
+	... 19 more
+2024-05-14 04:25:01.172222+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM CTFS where grupoid>?[*], CTFID>? "
+Syntax error in SQL statement "SELECT * FROM CTFS where grupoid>?[*], CTFID>? "; SQL statement:
+SELECT * FROM CTFS where grupoid>?, CTFID>?  [42000-224]
+2024-05-14 04:25:49.873754+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM CTFS where grupoid>?[*], CTFID>? "
+Syntax error in SQL statement "SELECT * FROM CTFS where grupoid>?[*], CTFID>? "; SQL statement:
+SELECT * FROM CTFS where grupoid>?, CTFID>?  [42000-224]
+2024-05-14 04:26:42.860815+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Metodo no permitido en un query. Use execute ó executeQuery en lugar de executeUpdate
+Method is not allowed for a query. Use execute or executeQuery instead of executeUpdate; SQL statement:
+SELECT * FROM CTFS where grupoid = ? and CTFID = ? [90001-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:566)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.command.Prepared.update(Prepared.java:244)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:169)
+	at org.h2.command.Command.executeUpdate(Command.java:256)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdateInternal(JdbcPreparedStatement.java:216)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdate(JdbcPreparedStatement.java:174)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at DAO.SqlDao.comprobarExistencia(SqlDao.kt:95)
+	at MainKt.main(Main.kt:37)
+	at MainKt.main(Main.kt)
+2024-05-14 04:36:30.669000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "insert into grupos ([*]'hola')\000d\000ainsert into ctfs (1,1,1)"; se esperaba "identifier"
+Syntax error in SQL statement "insert into grupos ([*]'hola')\000d\000ainsert into ctfs (1,1,1)"; expected "identifier"; SQL statement:
+insert into grupos ('hola')
+insert into ctfs (1,1,1) [42001-224]
+2024-05-14 04:36:54.421000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "insert into grupos ([*]'hola',null)\000d\000ainsert into ctfs (1,1,1)"; se esperaba "identifier"
+Syntax error in SQL statement "insert into grupos ([*]'hola',null)\000d\000ainsert into ctfs (1,1,1)"; expected "identifier"; SQL statement:
+insert into grupos ('hola',null)
+insert into ctfs (1,1,1) [42001-224]
+2024-05-14 04:37:44.145000+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Columna "GRUPODESC" no encontrada
+Column "GRUPODESC" not found; SQL statement:
+insert into ctfs(GRUPOID ,GRUPODESC ,MEJORPOSCTFID ) values (1,1,1) [42122-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.table.Table.getColumn(Table.java:759)
+	at org.h2.command.Parser.parseColumn(Parser.java:1190)
+	at org.h2.command.Parser.parseColumnList(Parser.java:1175)
+	at org.h2.command.Parser.parseInsert(Parser.java:1549)
+	at org.h2.command.Parser.parsePrepared(Parser.java:719)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1345)
+	at org.h2.server.web.WebApp.query(WebApp.java:1143)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1109)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1096)
+	at org.h2.server.web.WebThread.process(WebThread.java:190)
+	at org.h2.server.web.WebThread.run(WebThread.java:103)
+	at java.lang.Thread.run(Unknown Source)
+2024-05-14 04:38:04.046693+02:00 database: flush
+org.h2.message.DbException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.message.DbException.convert(DbException.java:407)
+	at org.h2.mvstore.db.Store.lambda$new$0(Store.java:122)
+	at org.h2.mvstore.MVStore.handleException(MVStore.java:1546)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:371)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:291)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:2035)
+	at org.h2.mvstore.db.Store.<init>(Store.java:133)
+	at org.h2.engine.Database.<init>(Database.java:326)
+	at org.h2.engine.Engine.openSession(Engine.java:92)
+	at org.h2.engine.Engine.openSession(Engine.java:222)
+	at org.h2.engine.Engine.createSession(Engine.java:201)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:343)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:125)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
+	at com.zaxxer.hikari.HikariDataSource.<init>(HikariDataSource.java:81)
+	at dbConnection.DataSourceFactory.getDS(DataSourceFactory.kt:25)
+	at MainKt.main(Main.kt:36)
+	at MainKt.main(Main.kt)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Error General : "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]"
+General error: "org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]" [50000-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:566)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 25 more
+Caused by: org.h2.mvstore.MVStoreException: The file is locked: D:/3-trimestre/programacion/TRIM3/default.mv.db [2.2.224/7]
+	at org.h2.mvstore.DataUtils.newMVStoreException(DataUtils.java:996)
+	at org.h2.mvstore.SingleFileStore.lockFileChannel(SingleFileStore.java:143)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:117)
+	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
+	... 19 more
