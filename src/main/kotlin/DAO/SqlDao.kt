@@ -62,7 +62,27 @@ class SqlDao(
         }
 
         override fun selectById(id: Int): Grupos? {
-            TODO("Not yet implemented")
+            val sql = "SELECT * FROM grupos WHERE GRUPOID = ?"
+            return try {
+                conexionBD.connection.use { conn ->
+                    conn.prepareStatement(sql).use { stmt ->
+                        stmt.setString(1, id.toString())
+                        val rs = stmt.executeQuery()
+                        if (rs.next()) {
+                            Grupos(
+                                grupoId = rs.getInt("GRUPOID"),
+                                grupoDesc = rs.getString("GRUPODESC"),
+                                mejorPosCTFId = rs.getInt("MEJORPOSCTFID")
+                            )
+                        } else {
+                            null
+                        }
+                    }
+                }
+            } catch (e: SQLException) {
+                consola.showMessage("3: error* insert query failed! (${e.message})")
+                null
+            }
         }
 
         override fun selectByIdCtf(id: Int): Ctfs? {

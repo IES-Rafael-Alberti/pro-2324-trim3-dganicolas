@@ -39,7 +39,7 @@ class Consola : Iconsola {
         return opcion
     }
 
-     override fun ctfsInsertado(ctf: Ctfs?){
+     override fun ctfsInsertado(fuenteDeDato: Dao,ctf: Ctfs?){
          if(ctf == null){
              showMessage(
                  "ERROR: El parámetro <grupoid> debe " +
@@ -47,9 +47,11 @@ class Consola : Iconsola {
                          "de tipo entero."
              )
          }else{
-             showMessage(
-                 "Procesado: Añadido el grupo \"$ctf\""
-             )
+             val grupo = fuenteDeDato.selectById(ctf.grupoId)
+             if (grupo != null) {
+                 showMessage(" Procesado: Añadida participación del grupo " +
+                         "\"${grupo.grupoDesc}\" en el CTF ${ctf.ctfdId} con una puntuación de ${ctf.puntuacion} puntos.")
+             }
          }
      }
 
@@ -62,19 +64,21 @@ class Consola : Iconsola {
             )
         }else{
             showMessage(
-                "Procesado: Añadido el grupo \"$grupo\""
+                "Procesado: Añadido el grupo \"${grupo.grupoDesc}\""
             )
         }
     }
 
     fun ctfsactualizado(fuenteDeDato: Dao, ctfsInsertado: Ctfs?, puntuacionantigua: Int) {
         if (ctfsInsertado == null){
-
+            showMessage("ERROR: El número de parámetros no es adecuado.")
         }else{
             val grupo = fuenteDeDato.selectById(ctfsInsertado.grupoId)
-            showMessage("Procesado: Actualizada la participación del grupo" +
-                    " \"${grupo.grupoId}\" en el CTF 1. " +
-                    "La puntuación cambió de 100 a 105 puntos.")
+            if (grupo != null) {
+                showMessage("Procesado: Actualizada la participación del grupo" +
+                        " \"${grupo.grupoDesc}\" en el CTF 1. " +
+                        "La puntuación cambió de ${ctfsInsertado.puntuacion} a $puntuacionantigua puntos.")
+            }
         }
     }
 }

@@ -102,7 +102,7 @@ fun main(args: Array<String>) = application {
                         consola.ctfsactualizado(fuenteDeDato,ctfsInsertado,puntuacionantigua)
                     }else{
                         val ctfsInsertado =fuenteDeDato.anadirParticipacion(ctf)
-                        consola.ctfsInsertado(ctfsInsertado)
+                        consola.ctfsInsertado(fuenteDeDato,ctfsInsertado)
                     }
 
 
@@ -113,6 +113,8 @@ fun main(args: Array<String>) = application {
                 }
             }
         }
+        //terminado pero no probado
+
         //3	-t <grupoId>
         // Elimina el grupo <grupoid> en la tabla GRUPOS,
         // por tanto también elimina todas sus participaciones en los CTF.
