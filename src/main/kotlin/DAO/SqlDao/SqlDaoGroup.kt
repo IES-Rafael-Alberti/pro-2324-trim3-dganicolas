@@ -1,15 +1,16 @@
-package DAO
+package DAO.SqlDao
 
+import DAO.IDaoGroup
 import Iconsola
 import dataclass.Ctfs
 import dataclass.Grupos
 import java.sql.SQLException
 import javax.sql.DataSource
 
-class SqlDao(
+class SqlDaoGroup(
     val conexionBD: DataSource,
     val consola: Iconsola
-) : Dao {
+) : IDaoGroup {
     override fun insert(grupo: Grupos): Grupos? {
         val sql = "INSERT INTO GRUPOS (GRUPODESC) VALUES (?)"
         return try {
@@ -30,36 +31,12 @@ class SqlDao(
     }
 
 
-        override fun anadirParticipacion(ctf: Ctfs): Ctfs? {
-            val sql = "INSERT INTO CTFS ( CTFID, GRUPOID, PUNTUACION ) VALUES (?, ?,?)"
-            return try {
-                conexionBD.connection.use { conn ->
-                    conn.prepareStatement(sql).use { stmt ->
-                        stmt.setInt(1, ctf.ctfdId)
-                        stmt.setInt(2, ctf.grupoId)
-                        stmt.setInt(3, ctf.puntuacion)
-                        val rs = stmt.executeUpdate()
-                        if (rs == 1) {
-                            ctf
-                        } else {
-                            consola.showMessage("error insert query failed! ($rs records inserted)")
-                            null
-                        }
-                    }
-                }
-            } catch (e: SQLException) {
-                consola.showMessage("1 :error* insert query failed! (${e.message})")
-                null
-            }
-        }
+
 
         override fun getAll(): List<Grupos>? {
             TODO("Not yet implemented")
         }
 
-        override fun getAllCtf(): List<Ctfs>? {
-            TODO("Not yet implemented")
-        }
 
         override fun selectById(id: Int): Grupos? {
             val sql = "SELECT * FROM grupos WHERE GRUPOID = ?"
@@ -98,11 +75,11 @@ class SqlDao(
         }
 
         override fun deleteById(id: Int): Boolean {
-            TODO("Not yet implemented")
+            val sql = "DELETE FROM GRUPOS WHERE GRUPOID = ?"
         }
 
         override fun deleteByIdCtf(id: Int): Boolean {
-            TODO("Not yet implemented")
+            val sql = "DELETE FROM CTFS WHERE GRUPOID = ?"
         }
 
     override fun comprobarExistencia(ctf: Ctfs): Boolean {

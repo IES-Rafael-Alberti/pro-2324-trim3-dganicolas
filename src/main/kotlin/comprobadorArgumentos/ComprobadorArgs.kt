@@ -8,9 +8,9 @@ class ComprobadorArgs : IcomprobadorArgs {
     override fun comprobarGrupos(grupo: String): Grupos? {
         return try{if (grupo.contains(";")) {
             val lista = grupo.split(";")
-            Grupos(null, lista[1], null)
+            Grupos(1, lista[1], lista[2].toIntOrNull())
         } else {
-            Grupos(null, grupo, null)
+            Grupos(1, grupo, null)
         }
         }catch (e: NumberFormatException ){
             null
@@ -20,7 +20,7 @@ class ComprobadorArgs : IcomprobadorArgs {
     override fun comprobarCtfs(ctf: String): Ctfs? {
         val lista = ctf.split(";")
         return try {
-            Ctfs(lista[0].toInt(), lista[0].toInt(), lista[0].toInt())
+            Ctfs(lista[0].toInt(), lista[1].toInt(), lista[2].toInt())
         }catch (e:NumberFormatException){
             null
         }

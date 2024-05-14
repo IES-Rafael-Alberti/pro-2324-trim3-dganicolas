@@ -10,7 +10,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(18)
 }
 
 group = "es.iesra.ctfm"
@@ -45,7 +45,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "21"
+    kotlinOptions.jvmTarget = "18"
 }
 
 tasks.jar {
@@ -60,7 +60,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "2324_PRO_u7u9_CTFM_pe"
+            packageName = "un9pe"
             packageVersion = "1.0.0"
         }
     }

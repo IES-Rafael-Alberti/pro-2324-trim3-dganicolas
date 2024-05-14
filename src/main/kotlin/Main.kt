@@ -1,5 +1,7 @@
-import DAO.Dao
-import DAO.SqlDao
+import DAO.IDaoCtf
+import DAO.IDaoGroup
+import DAO.SqlDao.SqlDaoCtf
+import DAO.SqlDao.SqlDaoGroup
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -46,12 +48,13 @@ fun main(args: Array<String>) = application {
     val gestorFicheros = GestorFicheros()
     val opcion = gestorFicheros.leerFicheroConfig(ficheroConfiguracion)
 
-    val fuenteDeDato: Dao = when (opcion) {
-        "SQL" ->
-            SqlDao(
-                DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI),
-                consola
-            )
+    val (fuenteDeDatoGroup, fuenteDeDatoCtfs) = when (opcion) {
+        "SQL" -> Pair(
+            SqlDaoGroup(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI), consola),
+            SqlDaoCtf(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI), consola)
+
+        )
+
 
         "XML" -> TODO()
         "JSON" -> TODO()
@@ -61,9 +64,14 @@ fun main(args: Array<String>) = application {
                 "ERROR**, El fichero de configuracion esta mal configurado, " +
                         "Abrimos conexion SQL"
             )
-            SqlDao(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI),consola)
+            Pair(
+                SqlDaoGroup(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI), consola),
+                SqlDaoCtf(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI), consola)
+
+            )
         }
     }
+    val CtfService
 
     when (args[0]) {
 
@@ -96,13 +104,13 @@ fun main(args: Array<String>) = application {
             for (i in 1..args.size) {
                 val ctf: Ctfs? = comprobador.comprobarCtfs(args[i])
                 if (ctf != null) {
-                    if(fuenteDeDato.comprobarExistencia(ctf)){
+                    if (fuenteDeDato.comprobarExistencia(ctf)) {
                         val puntuacionantigua = ctf.puntuacion
-                        val ctfsInsertado =fuenteDeDato.actualizarPuntuacion(ctf)
-                        consola.ctfsactualizado(fuenteDeDato,ctfsInsertado,puntuacionantigua)
-                    }else{
-                        val ctfsInsertado =fuenteDeDato.anadirParticipacion(ctf)
-                        consola.ctfsInsertado(fuenteDeDato,ctfsInsertado)
+                        val ctfsInsertado = fuenteDeDato.actualizarPuntuacion(ctf)
+                        consola.ctfsactualizado(fuenteDeDato, ctfsInsertado, puntuacionantigua)
+                    } else {
+                        val ctfsInsertado = fuenteDeDato.anadirParticipacion(ctf)
+                        consola.ctfsInsertado(fuenteDeDato, ctfsInsertado)
                     }
 
 
@@ -118,42 +126,57 @@ fun main(args: Array<String>) = application {
         //3	-t <grupoId>
         // Elimina el grupo <grupoid> en la tabla GRUPOS,
         // por tanto también elimina todas sus participaciones en los CTF.
-        "-t"->{
-            TODO()
+        "-t" -> {
+
+            val grupo: Grupos? = comprobador.comprobarGrupos(args[1])
+
+            if (grupo != null) {
+                val grupoEscogido = fuenteDeDato.selectById(grupo.grupoId)
+                if (grupoEscogido != null) {
+                    val lista = fuenteDeDato.getAllCtf()
+                    fuenteDeDato.deleteByIdCtf(grupoEscogido.grupoId)
+                    fuenteDeDato.deleteById(grupoEscogido.grupoId)
+
+                } else {
+
+                }
+
+
+            } else {
+                consola.showMessage(
+                    "ERROR: El número de parámetros no es adecuado."
+                )
+            }
         }
     }
+}
 
-    //3	-t <grupoId>
-    // Elimina el grupo <grupoid> en la tabla GRUPOS, por tanto también elimina todas sus participaciones en los CTF.
-    if (args[0] == "-t") {
+//4	-e <ctfId> <grupoId>
+// Elimina la participación del grupo <grupoid> en el CTF <ctfid>. Si no existe la participación, no realiza nada. Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
+if (args[0] == "-e") {
 
-    }
-    //4	-e <ctfId> <grupoId>
-    // Elimina la participación del grupo <grupoid> en el CTF <ctfid>. Si no existe la participación, no realiza nada. Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
-    if (args[0] == "-e") {
+}
+//5	-l <grupoId>	Si <grupoId>
+// esta presente muestra la información del grupo <grupoId> y sus participaciones. Si el grupo no está presente muestra la información de todos los grupos.
+if (args[0] == "-l") {
 
-    }
-    //5	-l <grupoId>	Si <grupoId>
-    // esta presente muestra la información del grupo <grupoId> y sus participaciones. Si el grupo no está presente muestra la información de todos los grupos.
-    if (args[0] == "-l") {
+}
+//6	-c <ctfId>	Si <ctfId>
+// esta presente muestra la participación de los grupos y la puntuación obtenida, ordenado de mayor a menor puntuación.
+if (args[0] == "-c") {
 
-    }
-    //6	-c <ctfId>	Si <ctfId>
-    // esta presente muestra la participación de los grupos y la puntuación obtenida, ordenado de mayor a menor puntuación.
-    if (args[0] == "-c") {
+}
+//7	-f <filepath>
+if (args[0] == "-f") {
 
-    }
-    //7	-f <filepath>
-    if (args[0] == "-f") {
+}
+// Si <filepath> existe, será un fichero con un conjunto de comandos para procesamiento por lotes.
 
-    }
-    // Si <filepath> existe, será un fichero con un conjunto de comandos para procesamiento por lotes.
+//8	-i
+// Lanza la interface gráfica.
+if (args[0] == "-i") {
 
-    //8	-i
-    // Lanza la interface gráfica.
-    if (args[0] == "-i") {
-
-    } else {
-        // mensaje de error
-    }
+} else {
+    // mensaje de error
+}
 }

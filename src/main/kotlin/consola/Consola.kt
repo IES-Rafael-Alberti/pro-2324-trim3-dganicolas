@@ -1,6 +1,6 @@
 package consola
 
-import DAO.Dao
+import DAO.IDaoGroup
 import Iconsola
 import dataclass.Ctfs
 import dataclass.Grupos
@@ -39,7 +39,7 @@ class Consola : Iconsola {
         return opcion
     }
 
-     override fun ctfsInsertado(fuenteDeDato: Dao,ctf: Ctfs?){
+     override fun ctfsInsertado(fuenteDeDato: IDaoGroup, ctf: Ctfs?){
          if(ctf == null){
              showMessage(
                  "ERROR: El parámetro <grupoid> debe " +
@@ -69,7 +69,7 @@ class Consola : Iconsola {
         }
     }
 
-    fun ctfsactualizado(fuenteDeDato: Dao, ctfsInsertado: Ctfs?, puntuacionantigua: Int) {
+    fun ctfsactualizado(fuenteDeDato: IDaoGroup, ctfsInsertado: Ctfs?, puntuacionantigua: Int) {
         if (ctfsInsertado == null){
             showMessage("ERROR: El número de parámetros no es adecuado.")
         }else{
