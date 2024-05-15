@@ -3,9 +3,12 @@ package service
 import dataclass.Ctfs
 
 interface ICtfsService {
-    fun create(user: Ctfs): Ctfs?
+    fun anadirParticipacion(ctf: Ctfs): Ctfs?
     fun getById(id: Int): Ctfs?
-    fun update(Grupo: Ctfs): Ctfs?
-    fun delete(id: Int)
-    fun getAll(): List<Ctfs>?
+    fun update(ctfs: Ctfs): Ctfs?
+    fun eliminarParticipacion(id: Int)
+    fun eliminarParticipacion(id: Int,idctf:Int): Boolean
+    fun getAll(id:Int? = null): List<Ctfs>?
+    fun actualizarPuntuacion(ctf: Ctfs): Ctfs?
+    fun comprobarExistencia(ctf: Ctfs): Boolean
 }

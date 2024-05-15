@@ -12,6 +12,7 @@ class SqlDaoGroup(
     val consola: Iconsola
 ) : IDaoGroup {
     override fun insert(grupo: Grupos): Grupos? {
+        //intentar que no se inserte grupos con mismo nombre
         val sql = "INSERT INTO GRUPOS (GRUPODESC) VALUES (?)"
         return try {
             conexionBD.connection.use { conn ->

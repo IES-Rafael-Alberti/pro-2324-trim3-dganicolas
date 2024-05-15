@@ -36,13 +36,28 @@ fun App() {
     }
 }
 
-//fun main(){
-//    val fuenteDeDato: Dao = SqlDao(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI),Consola())
-//    println(fuenteDeDato.comprobarExistencia(Ctfs(1,1,1)))
-//}
+fun main(){
+    //esto me sirve para ordenar los diccioanrios
+    //puedo hacer un for que vaya cambiando y que cada vesz que cambie la clave del diccionario
+    // se cambie de nuevo una variable valor,
+    // y que si ese valor esmenor que el valor anterior cambie en que mejor ctf :D variable mejor ctf
+    val numero: MutableList<MutableMap<Int, MutableMap<Int, Int>>> = mutableListOf(
+        mutableMapOf(1 to mutableMapOf(2 to 1)),
+        mutableMapOf(1 to mutableMapOf(3 to 3)),
+        mutableMapOf(1 to mutableMapOf(1 to 2))
+    )
+
+    val listaOrdenados = numero.sortedWith(compareBy({ it.keys.first() }, { it.values.first().keys.first() }, { it.values.first().values.first() }))
+
+    println(listaOrdenados)
+    var idctf: Int
+    for (i in listaOrdenados){
+
+    }
+}
 
 
-fun main(args: Array<String>) = application {
+fun maxzxzzxzxin(args: Array<String>) = application {
 
     val ficheroConfiguracion = File("src/main/resources/config.init")
     val comprobador = ComprobadorArgs()
@@ -73,8 +88,8 @@ fun main(args: Array<String>) = application {
             )
         }
     }
-    val CtfService:ICtfsService = CtfService(fuenteDeDatoCtfs)
-    val GroupService:IGruposService = GroupService(fuenteDeDatoGroup)
+    val ctfService: ICtfsService = CtfService(fuenteDeDatoCtfs)
+    val groupService: IGruposService = GroupService(fuenteDeDatoGroup)
 
     when (args[0]) {
 
@@ -85,7 +100,7 @@ fun main(args: Array<String>) = application {
             for (i in 1..args.size) {
                 val grupo: Grupos? = comprobador.comprobarGrupos(args[i])
                 if (grupo != null) {
-                    val grupoInsertado = GroupService.create(grupo)
+                    val grupoInsertado = groupService.crearGrupo(grupo)
                     consola.grupoInsertado(grupoInsertado)
                 } else {
                     consola.showMessage(
@@ -107,15 +122,14 @@ fun main(args: Array<String>) = application {
             for (i in 1..args.size) {
                 val ctf: Ctfs? = comprobador.comprobarCtfs(args[i])
                 if (ctf != null) {
-                    if (fuenteDeDato.comprobarExistencia(ctf)) {
+                    if (ctfService.comprobarExistencia(ctf)) {
                         val puntuacionantigua = ctf.puntuacion
-                        val ctfsInsertado = fuenteDeDato.actualizarPuntuacion(ctf)
-                        consola.ctfsactualizado(fuenteDeDato, ctfsInsertado, puntuacionantigua)
+                        val ctfsInsertado = ctfService.actualizarPuntuacion(ctf)
+                        consola.ctfsactualizado(groupService, ctfsInsertado, puntuacionantigua)
                     } else {
-                        val ctfsInsertado = fuenteDeDato.anadirParticipacion(ctf)
-                        consola.ctfsInsertado(fuenteDeDato, ctfsInsertado)
+                        val ctfsInsertado = ctfService.anadirParticipacion(ctf)
+                        consola.ctfsInsertado(groupService, ctfsInsertado)
                     }
-
 
                 } else {
                     consola.showMessage(
@@ -130,18 +144,23 @@ fun main(args: Array<String>) = application {
         // Elimina el grupo <grupoid> en la tabla GRUPOS,
         // por tanto también elimina todas sus participaciones en los CTF.
         "-t" -> {
-
-            val grupo: Grupos? = comprobador.comprobarGrupos(args[1])
+            var grupo: Grupos? = try {
+                comprobador.comprobarGrupos(args[1])
+            } catch (e: IndexOutOfBoundsException) {
+                null
+            }
 
             if (grupo != null) {
-                val grupoEscogido = fuenteDeDato.selectById(grupo.grupoId)
+                val grupoEscogido = groupService.getById(grupo.grupoId)
                 if (grupoEscogido != null) {
-                    val lista = fuenteDeDato.getAllCtf()
-                    fuenteDeDato.deleteByIdCtf(grupoEscogido.grupoId)
-                    fuenteDeDato.deleteById(grupoEscogido.grupoId)
-
+                    val lista = ctfService.getAll()
+                    ctfService.eliminarParticipacion(grupoEscogido.grupoId)
+                    groupService.delete(grupoEscogido.grupoId)
+                    consola.participacionEliminadas(grupoEscogido.grupoDesc, lista)
                 } else {
-
+                    consola.showMessage(
+                        "ERROR: El grupo no esta registrado."
+                    )
                 }
 
 
@@ -151,35 +170,75 @@ fun main(args: Array<String>) = application {
                 )
             }
         }
+        //4	-e <ctfId> <grupoId>
+        // Elimina la participación del grupo <grupoid> en el CTF <ctfid>.
+        // Si no existe la participación, no realiza nada.
+        // Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
+        "-e" -> {
+            try {
+                val grupo = groupService.getById(args[1].toInt())
+                val ctfid = ctfService.getById(args[2].toInt())
+                if (grupo != null && ctfid != null) {
+                    if (ctfService.eliminarParticipacion(grupo.grupoId, ctfid.ctfdId)) {
+                        consola.showMessage(
+                            "Procesado: Eliminada participación del grupo \"${grupo.grupoDesc}\"" +
+                                    " en el CTF ${ctfid.ctfdId}."
+                        )
+                        val numero: MutableList<MutableMap<Int,
+                                MutableMap<Int, Int>>> =
+                            emptyList<MutableMap<Int,
+                                    MutableMap<Int, Int>>>().toMutableList()
+                        ctfService.getAll()?.forEach {
+                                numero.add(mutableMapOf(it.ctfdId to mutableMapOf(it.puntuacion to it.grupoId)))
+                        } ?: consola.showMessage(
+                            "ERROR 003: no se pudo aceder a la tabla ctfs, " +
+                                    "por tanto no puedo recoger todas las puntuaciones"
+                        )
+
+                        val listaOrdenados = numero.sortedWith(compareBy({ it.keys.first() }, { it.values.first().keys.first() }, { it.values.first().values.first() }))
+
+
+                        groupService.getAll()?.forEach {
+                            //quiero agarrar un solo grupo no varios
+                        } ?: consola.showMessage(
+                            "ERROR 003: no se pudo aceder a la tabla group, " +
+                                    "por tanto no puedo actualizar la puntuacion de mejorctfdid"
+                        )
+                    } else {
+                        consola.showMessage("participacion no encontrada")
+                    }
+                } else {
+                    consola.showMessage("participacion no encontrada")
+                }
+            } catch (e: IndexOutOfBoundsException) {
+                consola.showMessage("ERROR 001: parametros introducido erroneamente.")
+            } catch (e: NumberFormatException) {
+                consola.showMessage("ERROR 002: el segundo parametro debe de ser un numero entero.")
+            }
+        }
     }
-}
 
-//4	-e <ctfId> <grupoId>
-// Elimina la participación del grupo <grupoid> en el CTF <ctfid>. Si no existe la participación, no realiza nada. Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
-if (args[0] == "-e") {
-
-}
 //5	-l <grupoId>	Si <grupoId>
 // esta presente muestra la información del grupo <grupoId> y sus participaciones. Si el grupo no está presente muestra la información de todos los grupos.
-if (args[0] == "-l") {
+    if (args[0] == "-l") {
 
-}
+    }
 //6	-c <ctfId>	Si <ctfId>
 // esta presente muestra la participación de los grupos y la puntuación obtenida, ordenado de mayor a menor puntuación.
-if (args[0] == "-c") {
+    if (args[0] == "-c") {
 
-}
+    }
 //7	-f <filepath>
-if (args[0] == "-f") {
+    if (args[0] == "-f") {
 
-}
+    }
 // Si <filepath> existe, será un fichero con un conjunto de comandos para procesamiento por lotes.
 
 //8	-i
 // Lanza la interface gráfica.
-if (args[0] == "-i") {
+    if (args[0] == "-i") {
 
-} else {
-    // mensaje de error
-}
+    } else {
+        // mensaje de error
+    }
 }
