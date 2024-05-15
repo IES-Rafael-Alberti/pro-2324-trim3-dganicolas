@@ -1,5 +1,3 @@
-import DAO.IDaoCtf
-import DAO.IDaoGroup
 import DAO.SqlDao.SqlDaoCtf
 import DAO.SqlDao.SqlDaoGroup
 import androidx.compose.desktop.ui.tooling.preview.Preview
@@ -18,6 +16,10 @@ import dataclass.Ctfs
 import dataclass.Grupos
 import dbConnection.DataSourceFactory
 import gestorFichero.GestorFicheros
+import service.CtfService
+import service.GroupService
+import service.ICtfsService
+import service.IGruposService
 import java.io.File
 
 @Composable
@@ -71,7 +73,8 @@ fun main(args: Array<String>) = application {
             )
         }
     }
-    val CtfService
+    val CtfService:ICtfsService = CtfService(fuenteDeDatoCtfs)
+    val GroupService:IGruposService = GroupService(fuenteDeDatoGroup)
 
     when (args[0]) {
 
@@ -82,7 +85,7 @@ fun main(args: Array<String>) = application {
             for (i in 1..args.size) {
                 val grupo: Grupos? = comprobador.comprobarGrupos(args[i])
                 if (grupo != null) {
-                    val grupoInsertado = fuenteDeDato.insert(grupo)
+                    val grupoInsertado = GroupService.create(grupo)
                     consola.grupoInsertado(grupoInsertado)
                 } else {
                     consola.showMessage(

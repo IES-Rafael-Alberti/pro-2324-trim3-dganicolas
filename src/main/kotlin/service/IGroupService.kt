@@ -2,7 +2,7 @@ package service
 
 import dataclass.Grupos
 
-interface GruposService {
+interface IGruposService {
     fun create(user: Grupos): Grupos?
     fun getById(id: Int): Grupos?
     fun update(Grupo: Grupos): Grupos?

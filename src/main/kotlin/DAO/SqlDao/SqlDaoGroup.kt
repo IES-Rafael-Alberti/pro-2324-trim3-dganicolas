@@ -31,99 +31,44 @@ class SqlDaoGroup(
     }
 
 
-
-
-        override fun getAll(): List<Grupos>? {
-            TODO("Not yet implemented")
-        }
-
-
-        override fun selectById(id: Int): Grupos? {
-            val sql = "SELECT * FROM grupos WHERE GRUPOID = ?"
-            return try {
-                conexionBD.connection.use { conn ->
-                    conn.prepareStatement(sql).use { stmt ->
-                        stmt.setString(1, id.toString())
-                        val rs = stmt.executeQuery()
-                        if (rs.next()) {
-                            Grupos(
-                                grupoId = rs.getInt("GRUPOID"),
-                                grupoDesc = rs.getString("GRUPODESC"),
-                                mejorPosCTFId = rs.getInt("MEJORPOSCTFID")
-                            )
-                        } else {
-                            null
-                        }
-                    }
-                }
-            } catch (e: SQLException) {
-                consola.showMessage("3: error* insert query failed! (${e.message})")
-                null
-            }
-        }
-
-        override fun selectByIdCtf(id: Int): Ctfs? {
-            TODO("Not yet implemented")
-        }
-
-        override fun update(book: Grupos): Grupos? {
-            TODO("Not yet implemented")
-        }
-
-        override fun update(book: Ctfs): Ctfs? {
-            TODO("Not yet implemented")
-        }
-
-        override fun deleteById(id: Int): Boolean {
-            val sql = "DELETE FROM GRUPOS WHERE GRUPOID = ?"
-        }
-
-        override fun deleteByIdCtf(id: Int): Boolean {
-            val sql = "DELETE FROM CTFS WHERE GRUPOID = ?"
-        }
-
-    override fun comprobarExistencia(ctf: Ctfs): Boolean {
-        val sql = "SELECT * FROM CTFS where grupoid = ? and CTFID = ? "
-        return try {
-            conexionBD.connection.use { conn ->
-                conn.prepareStatement(sql).use { stmt ->
-                    stmt.setInt(1, ctf.grupoId)
-                    stmt.setInt(2, ctf.ctfdId)
-                    val rs = stmt.executeQuery()
-                    if (rs.next()) {
-                        true
-                    } else {
-                        consola.showMessage("error insert query failed! ($rs records inserted)")
-                        false
-                    }
-                }
-            }
-        } catch (e: SQLException) {
-            false
-        }
+    override fun getAll(): List<Grupos>? {
+        TODO("Not yet implemented")
     }
 
-    override fun actualizarPuntuacion(ctf: Ctfs): Ctfs? {
-        val sql = "UPDATE CTFS SET PUNTUACION = ? WHERE CTFID= ? and GRUPOID = ? "
+
+    override fun selectById(id: Int): Grupos? {
+        val sql = "SELECT * FROM grupos WHERE GRUPOID = ?"
         return try {
             conexionBD.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    stmt.setInt(1, ctf.puntuacion)
-                    stmt.setInt(2, ctf.ctfdId)
-                    stmt.setInt(3, ctf.grupoId)
-                    val rs = stmt.executeUpdate()
-                    if (rs == 1) {
-                        ctf
+                    stmt.setString(1, id.toString())
+                    val rs = stmt.executeQuery()
+                    if (rs.next()) {
+                        Grupos(
+                            grupoId = rs.getInt("GRUPOID"),
+                            grupoDesc = rs.getString("GRUPODESC"),
+                            mejorPosCTFId = rs.getInt("MEJORPOSCTFID")
+                        )
                     } else {
-                        consola.showMessage("error insert query failed! ($rs records inserted)")
                         null
                     }
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("1 :error* insert query failed! (${e.message})")
+            consola.showMessage("3: error* insert query failed! (${e.message})")
             null
         }
     }
+
+    override fun update(book: Grupos): Grupos? {
+        TODO("Not yet implemented")
+    }
+
+
+    override fun deleteById(id: Int): Boolean {
+        val sql = "DELETE FROM GRUPOS WHERE GRUPOID = ?"
+        return false
+    }
+
 }
 
