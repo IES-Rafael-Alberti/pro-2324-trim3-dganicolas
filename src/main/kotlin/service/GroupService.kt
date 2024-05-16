@@ -2,6 +2,7 @@ package service
 
 import DAO.IDaoGroup
 import DAO.SqlDao.SqlDaoGroup
+import dataclass.Ctfs
 import dataclass.Grupos
 
 class GroupService(private val groupDao: IDaoGroup) :IGruposService {
@@ -23,5 +24,9 @@ class GroupService(private val groupDao: IDaoGroup) :IGruposService {
 
     override fun getAll(): List<Grupos>? {
         TODO("Not yet implemented")
+    }
+
+    override fun actualizarmejorCtfs(grupo: Grupos, ctfs: List<Ctfs>?) {
+        return groupDao.actualizarPosiciones(grupo,ctfs)
     }
 }

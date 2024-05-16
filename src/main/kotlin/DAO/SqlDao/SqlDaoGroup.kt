@@ -70,6 +70,44 @@ class SqlDaoGroup(
         val sql = "DELETE FROM GRUPOS WHERE GRUPOID = ?"
         return false
     }
+    fun saberMejorCtf(ctfs: List<Ctfs>,codGrupo:Int):Int {
+        var ctfid = 0
+        var posicion = 0
+        var posicionActual = 0
+        var ctfdidmejor = 0
+        var hasalido= true
+
+        ctfs.sortedWith(compareBy({ it.ctfdId },{it.puntuacion},{it.grupoId})).forEach {
+            if(it.ctfdId != ctfid){
+                if(posicion < posicionActual){
+                    posicionActual = 0
+                    ctfid = it.ctfdId
+                }else{
+                    posicion = posicionActual
+                    posicionActual = 0
+                    ctfid = it.ctfdId
+                    ctfdidmejor = it.ctfdId
+                }
+
+            }
+            if(it.grupoId == codGrupo){
+                hasalido = false
+            }
+            if (hasalido){
+                posicionActual ++
+            }
+
+        }
+        return ctfdidmejor
+    }
+    override fun actualizarPosiciones(grupo: Grupos, ctfs: List<Ctfs>?) {
+        if (ctfs != null) {
+            val mejorctf = saberMejorCtf(ctfs,grupo.grupoId)
+            val sql = "update grupos set mejor stfid where codigo grupo"
+        }else{
+            consola.showMessage("no se encontro todos los ctfs")
+        }
+    }
 
 }
 

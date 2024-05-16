@@ -1,5 +1,6 @@
 package DAO
 
+import dataclass.Ctfs
 import dataclass.Grupos
 
 interface IDaoGroup {
@@ -8,4 +9,5 @@ interface IDaoGroup {
     fun selectById(id: Int): Grupos?
     fun update(book: Grupos): Grupos?
     fun deleteById(id:Int): Boolean
+    fun actualizarPosiciones(grupo: Grupos, ctfs: List<Ctfs>?)
 }

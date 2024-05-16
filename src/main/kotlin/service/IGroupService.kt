@@ -1,5 +1,6 @@
 package service
 
+import dataclass.Ctfs
 import dataclass.Grupos
 
 interface IGruposService {
@@ -8,4 +9,5 @@ interface IGruposService {
     fun update(grupo: Grupos): Grupos?
     fun delete(id: Int)
     fun getAll(): List<Grupos>?
+    fun actualizarmejorCtfs(grupo: Grupos, ctfs: List<Ctfs>?)
 }

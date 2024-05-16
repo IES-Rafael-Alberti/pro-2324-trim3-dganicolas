@@ -36,28 +36,51 @@ fun App() {
     }
 }
 
-fun main(){
-    //esto me sirve para ordenar los diccioanrios
-    //puedo hacer un for que vaya cambiando y que cada vesz que cambie la clave del diccionario
-    // se cambie de nuevo una variable valor,
-    // y que si ese valor esmenor que el valor anterior cambie en que mejor ctf :D variable mejor ctf
-    val numero: MutableList<MutableMap<Int, MutableMap<Int, Int>>> = mutableListOf(
-        mutableMapOf(1 to mutableMapOf(2 to 1)),
-        mutableMapOf(1 to mutableMapOf(3 to 3)),
-        mutableMapOf(1 to mutableMapOf(1 to 2))
-    )
+//fun main(){
+//    //esto me sirve para ordenar los diccioanrios
+//    //puedo hacer un for que vaya cambiando y que cada vesz que cambie la clave del diccionario
+//    // se cambie de nuevo una variable valor,
+//    // y que si ese valor esmenor que el valor anterior cambie en que mejor ctf :D variable mejor ctf
+//    val numero: MutableList<MutableMap<Int, MutableMap<Int, Int>>> = mutableListOf(
+//        mutableMapOf(1 to mutableMapOf(2 to 1)),
+//        mutableMapOf(3 to mutableMapOf(3 to 3)),
+//        mutableMapOf(4 to mutableMapOf(1 to 2)),
+//        mutableMapOf(2 to mutableMapOf(1 to 2))
+//    )
+//
+//    val listaOrdenados = numero.sortedWith(compareBy({ it.keys.first() }, { it.values.first().keys.first() }, { it.values.first().values.first() }))
+//
+//    println(listaOrdenados)
+//    var idctf=  1
+//    var competicion = 0
+//    var posicion = 0
+//    var posicionactual = 0
+//    var contador = 0
+//    for (i in listaOrdenados){
+//        if (idctf != i.keys.first()){
+//            if(posicionactual < posicion){
+//                competicion = idctf
+//                posicion = posicionactual
+//                contador = 0
+//                posicionactual = 0
+//                idctf= i.keys.first()
+//            }
+//            contador ++
+//            val valores=listaOrdenados[idctf]
+//            val grupo = valores.values.first()
+//            if (grupo.values.first() == 2){
+//                posicionactual = contador
+//                println("el equipo ${grupo.values.first()} ha conseguido el puesto $contador")
+//            }
+//        }
+//
+//
+//
+//    }
+//}
 
-    val listaOrdenados = numero.sortedWith(compareBy({ it.keys.first() }, { it.values.first().keys.first() }, { it.values.first().values.first() }))
 
-    println(listaOrdenados)
-    var idctf: Int
-    for (i in listaOrdenados){
-
-    }
-}
-
-
-fun maxzxzzxzxin(args: Array<String>) = application {
+fun main(args: Array<String>) = application {
 
     val ficheroConfiguracion = File("src/main/resources/config.init")
     val comprobador = ComprobadorArgs()
@@ -184,26 +207,10 @@ fun maxzxzzxzxin(args: Array<String>) = application {
                             "Procesado: Eliminada participación del grupo \"${grupo.grupoDesc}\"" +
                                     " en el CTF ${ctfid.ctfdId}."
                         )
-                        val numero: MutableList<MutableMap<Int,
-                                MutableMap<Int, Int>>> =
-                            emptyList<MutableMap<Int,
-                                    MutableMap<Int, Int>>>().toMutableList()
-                        ctfService.getAll()?.forEach {
-                                numero.add(mutableMapOf(it.ctfdId to mutableMapOf(it.puntuacion to it.grupoId)))
-                        } ?: consola.showMessage(
-                            "ERROR 003: no se pudo aceder a la tabla ctfs, " +
-                                    "por tanto no puedo recoger todas las puntuaciones"
-                        )
 
-                        val listaOrdenados = numero.sortedWith(compareBy({ it.keys.first() }, { it.values.first().keys.first() }, { it.values.first().values.first() }))
+                        ctfService.getAll()
+                        groupService.actualizarmejorCtfs(grupo,ctfService.getAll())
 
-
-                        groupService.getAll()?.forEach {
-                            //quiero agarrar un solo grupo no varios
-                        } ?: consola.showMessage(
-                            "ERROR 003: no se pudo aceder a la tabla group, " +
-                                    "por tanto no puedo actualizar la puntuacion de mejorctfdid"
-                        )
                     } else {
                         consola.showMessage("participacion no encontrada")
                     }
