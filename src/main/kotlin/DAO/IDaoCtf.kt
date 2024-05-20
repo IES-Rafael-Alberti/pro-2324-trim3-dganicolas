@@ -4,7 +4,7 @@ import dataclass.Ctfs
 
 interface IDaoCtf {
 
-    fun insert(ctf: Ctfs): Ctfs?
+    fun anadirParticipacion(ctf: Ctfs): Ctfs?
     fun getAll(numero:Int?= null): List<Ctfs>?
     fun selectById(id: Int): Ctfs?
     fun update(book: Ctfs): Ctfs?

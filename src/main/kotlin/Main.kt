@@ -79,6 +79,15 @@ fun App() {
 //    }
 //}
 
+/**
+ * notas:
+ * problema 1: dia 20/05/2024 a las 6:34: estado no solucionado
+ * voy a tener problema con los for a la hora del parametro -f
+ * solucion hechar los for en el main y que cada funcion reciba lo que tenga que recibir
+ *
+ * problema numero 2 20/05/2024 a la 6:43: estado no solucionado
+ * como mi funcionana retorna algo TODAS, hacer que los mensajes de error o success se muestren en el main, asi la clase DAO se encarga de lo que tiene que hacer y no la sobvrecargo tontamente
+ * */
 
 fun main(args: Array<String>) = application {
 
@@ -114,78 +123,47 @@ fun main(args: Array<String>) = application {
     val ctfService: ICtfsService = CtfService(fuenteDeDatoCtfs)
     val groupService: IGruposService = GroupService(fuenteDeDatoGroup)
 
-    when (args[0]) {
-
-        //id	comando	Descripción
-        //1	-g <grupoId> <grupoDesc>
-        // Añade un nuevo grupo con <grupoid> y <grupodesc> en la tabla GRUPOS.
-        "-g" -> {
-            for (i in 1..args.size) {
-                val grupo: Grupos? = comprobador.comprobarGrupos(args[i])
-                if (grupo != null) {
-                    val grupoInsertado = groupService.crearGrupo(grupo)
-                    consola.grupoInsertado(grupoInsertado)
-                } else {
-                    consola.showMessage(
-                        "ERROR: El parámetro <grupoid> " +
-                                "debe ser un valor numérico de tipo entero."
-                    )
-                }
-            }
-        }
-        //terminado pero no probado
-
-        //2	-p <ctfId> <grupoId> <puntuacion>
-        // Añade una participación del grupo <grupoid> en el CTF <ctfid>
-        // con la puntuación <puntuacion>. Si la participación del grupo <grupoid>
-        // en el CTF <ctfid> ya existe, actualiza la puntualización.
-        // En cualquiera de los casos, recalcula el campo mejorposCTFid
-        // de los grupos en la tabla GRUPOS.
-        "-p" -> {
-            for (i in 1..args.size) {
-                val ctf: Ctfs? = comprobador.comprobarCtfs(args[i])
-                if (ctf != null) {
-                    if (ctfService.comprobarExistencia(ctf)) {
-                        val puntuacionantigua = ctf.puntuacion
-                        val ctfsInsertado = ctfService.actualizarPuntuacion(ctf)
-                        consola.ctfsactualizado(groupService, ctfsInsertado, puntuacionantigua)
-                    } else {
-                        val ctfsInsertado = ctfService.anadirParticipacion(ctf)
-                        consola.ctfsInsertado(groupService, ctfsInsertado)
-                    }
-
-                } else {
-                    consola.showMessage(
-                        "ERROR: El número de parámetros no es adecuado."
-                    )
-                }
-            }
-        }
-        //terminado pero no probado
-
-        //3	-t <grupoId>
-        // Elimina el grupo <grupoid> en la tabla GRUPOS,
-        // por tanto también elimina todas sus participaciones en los CTF.
-        "-t" -> {
-            var grupo: Grupos? = try {
-                comprobador.comprobarGrupos(args[1])
-            } catch (e: IndexOutOfBoundsException) {
-                null
-            }
-
+    fun crearGrupo() {//-g, esta bien realizada
+        //esta funcion no se debe de tocar mas
+        //funciona bien
+        for (i in 1..args.size) {
+            //compruebo al grupo
+            val grupo: Grupos? = comprobador.comprobarGrupos(args[i])
             if (grupo != null) {
-                val grupoEscogido = groupService.getById(grupo.grupoId)
-                if (grupoEscogido != null) {
-                    val lista = ctfService.getAll()
-                    ctfService.eliminarParticipacion(grupoEscogido.grupoId)
-                    groupService.delete(grupoEscogido.grupoId)
-                    consola.participacionEliminadas(grupoEscogido.grupoDesc, lista)
-                } else {
-                    consola.showMessage(
-                        "ERROR: El grupo no esta registrado."
-                    )
-                }
+                // si el grupo es distinto de nulo inserto el grupo
+                val grupoInsertado = groupService.crearGrupo(grupo)
+                //si se ha insertado correctamente imprimo por pantalla
+                consola.grupoInsertado(grupoInsertado)
+            } else {
+                consola.showMessage(
+                    "ERROR: El parámetro <grupoid> " +
+                            "debe ser un valor numérico de tipo entero."
+                )
+            }
+        }
+    }
 
+    fun anadirParticipacion() {//-p
+        //funcion comprobada no tocar o modificar
+        for (i in 1..args.size) {
+            //esto me devuelve un ctf o un nulo como error
+            val ctf: Ctfs? = comprobador.comprobarCtfs(args[i])
+            if (ctf != null) {
+                // si el grupo no es nulo y existe actualiza su puntuacion
+                if (ctfService.comprobarExistencia(ctf)) {
+
+                    //esta parte esta correcta
+                    val puntuacionantigua = ctf.puntuacion
+                    val ctfsInsertado = ctfService.actualizarPuntuacion(ctf)
+                    consola.ctfsactualizado(groupService, ctfsInsertado, puntuacionantigua)
+
+                    //si no lo que hace es crear una nueva participacion
+                } else {
+
+                    //esta parte tambien esta correcta
+                    val ctfsInsertado = ctfService.anadirParticipacion(ctf)
+                    consola.ctfsInsertado(groupService, ctfsInsertado)
+                }
 
             } else {
                 consola.showMessage(
@@ -193,36 +171,117 @@ fun main(args: Array<String>) = application {
                 )
             }
         }
-        //4	-e <ctfId> <grupoId>
-        // Elimina la participación del grupo <grupoid> en el CTF <ctfid>.
-        // Si no existe la participación, no realiza nada.
-        // Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
-        "-e" -> {
-            try {
-                val grupo = groupService.getById(args[1].toInt())
-                val ctfid = ctfService.getById(args[2].toInt())
-                if (grupo != null && ctfid != null) {
-                    if (ctfService.eliminarParticipacion(grupo.grupoId, ctfid.ctfdId)) {
-                        consola.showMessage(
-                            "Procesado: Eliminada participación del grupo \"${grupo.grupoDesc}\"" +
-                                    " en el CTF ${ctfid.ctfdId}."
-                        )
+    }
 
-                        ctfService.getAll()
-                        groupService.actualizarmejorCtfs(grupo,ctfService.getAll())
+    fun eliminargrupo() {//-t
+        //funcion no comprobada, no tocar a menos que a la hora de compilar de fallos
+        //compruebo el grupo por si acaso el usuario me lo ha puesto erroneo
+        var grupo: Grupos? = try {
+            comprobador.comprobarGrupos(args[1])
+        } catch (e: IndexOutOfBoundsException) {
+            null
+        }
 
-                    } else {
-                        consola.showMessage("participacion no encontrada")
+        if (grupo != null) {
+            //compruebo si el grupo esta en la base de datos
+            val grupoEscogido = groupService.getById(grupo.grupoId)
+            if (grupoEscogido != null) {
+                //escogo toda la lista de ctf, antes de eliminar
+                val lista = ctfService.getAll()
+                //elimino las participaciones del grupo en al tabla ctf, ME FUNCIONA ESTAS FUNCION NO TOCAR
+                ctfService.eliminarParticipacion(grupoEscogido.grupoId)
+                //elimino en este caso al grupo, FUNCIONA NO TOCAR
+                groupService.eliminarGrupo(grupoEscogido.grupoId)
+                //muestro por consola el numero de participaciones eliminada y el grupo
+                consola.participacionEliminadas(grupoEscogido.grupoDesc, lista)
+            } else {
+                consola.showMessage(
+                    "ERROR: El grupo no esta registrado."
+                )
+            }
+
+
+        } else {
+            consola.showMessage(
+                "ERROR: El número de parámetros no es adecuado."
+            )
+        }
+    }
+
+    fun eliminarSoloPArticipacion() {//-e
+        //FUNCIONA NO TOCAR
+        try {
+            //compruebo si el grupo y el usuario estan bien
+            val grupo = groupService.getById(args[1].toInt())
+            val ctfid = ctfService.escogerUnSoloCtf(args[2].toInt())
+            //si las dos cosas estan bien entonces lo que hago es lo siguiente
+            if (grupo != null && ctfid != null) {
+                //aqui intento eliminar esa participacion
+                if (ctfService.eliminarParticipacion(grupo.grupoId, ctfid.ctfdId)) {
+                    //si se mete en esta parte del codigo es que ha salid ocorrectamente la transccion
+                    consola.showMessage(
+                        "Procesado: Eliminada participación del grupo \"${grupo.grupoDesc}\"" +
+                                " en el CTF ${ctfid}."
+                    )
+                    //aqui miro si ese grupo ha tenido algun otro mejor puntuacion
+                    val grupoActualizado = groupService.actualizarmejorCtfs(grupo, ctfService.getAll())
+                    //si al final no tiene ninguna participacion entoncesm uestro un mensaje o otro
+                    if (grupoActualizado != null) {
+                        if (grupoActualizado.mejorPosCTFId == null) {
+                            consola.showMessage("el grupo ${grupoActualizado.grupoDesc} no tiene ninguna participacion despues de eliminar su unica participacion.")
+                        } else {
+                            consola.showMessage("el grupo ${grupoActualizado.grupoDesc} ahora su mejor ctf es ~${grupoActualizado.mejorPosCTFId}")
+                        }
                     }
                 } else {
-                    consola.showMessage("participacion no encontrada")
+                    consola.showMessage("ERROR: participacion no eliminada")
                 }
-            } catch (e: IndexOutOfBoundsException) {
-                consola.showMessage("ERROR 001: parametros introducido erroneamente.")
-            } catch (e: NumberFormatException) {
-                consola.showMessage("ERROR 002: el segundo parametro debe de ser un numero entero.")
+            } else {
+                consola.showMessage("participacion no encontrada")
             }
+        } catch (e: IndexOutOfBoundsException) {
+            consola.showMessage("ERROR 001: parametros introducido erroneamente.")
+        } catch (e: NumberFormatException) {
+            consola.showMessage("ERROR 002: el segundo parametro debe de ser un numero entero.")
         }
+    }
+
+when (args[0]) {
+
+    //id	comando	Descripción
+    //1	-g <grupoId> <grupoDesc>
+    // Añade un nuevo grupo con <grupoid> y <grupodesc> en la tabla GRUPOS.
+    "-g" -> {
+        //esta funcion no se debe de tocar mas
+        crearGrupo()
+        //funciona bien
+    }
+    //terminado pero no probado
+
+    //2	-p <ctfId> <grupoId> <puntuacion>
+    // Añade una participación del grupo <grupoid> en el CTF <ctfid>
+    // con la puntuación <puntuacion>. Si la participación del grupo <grupoid>
+    // en el CTF <ctfid> ya existe, actualiza la puntualización.
+    // En cualquiera de los casos, recalcula el campo mejorposCTFid
+    // de los grupos en la tabla GRUPOS.
+    "-p" -> {
+        //funcion comprobada no tocar o modificar
+        anadirParticipacion()
+    }
+    //terminado pero no probado
+
+    //3	-t <grupoId>
+    // Elimina el grupo <grupoid> en la tabla GRUPOS,
+    // por tanto también elimina todas sus participaciones en los CTF.
+    "-t" -> {
+        eliminargrupo()
+    }
+    //4	-e <ctfId> <grupoId>
+    // Elimina la participación del grupo <grupoid> en el CTF <ctfid>.
+    // Si no existe la participación, no realiza nada.
+    // Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
+    "-e" -> {
+        eliminarSoloPArticipacion()
     }
 
 //5	-l <grupoId>	Si <grupoId>

@@ -4,9 +4,10 @@ import dataclass.Ctfs
 
 interface ICtfsService {
     fun anadirParticipacion(ctf: Ctfs): Ctfs?
-    fun getById(id: Int): Ctfs?
+    fun escogerListaCtfOParteDeCtf(id: Int? = null): List<Ctfs>?
+    fun escogerUnSoloCtf(id: Int): Ctfs?
     fun update(ctfs: Ctfs): Ctfs?
-    fun eliminarParticipacion(id: Int)
+    fun eliminarParticipacion(id: Int):Boolean
     fun eliminarParticipacion(id: Int,idctf:Int): Boolean
     fun getAll(id:Int? = null): List<Ctfs>?
     fun actualizarPuntuacion(ctf: Ctfs): Ctfs?

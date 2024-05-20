@@ -1,13 +1,13 @@
 package service
 
 import DAO.IDaoGroup
-import DAO.SqlDao.SqlDaoGroup
 import dataclass.Ctfs
 import dataclass.Grupos
 
 class GroupService(private val groupDao: IDaoGroup) :IGruposService {
     override fun crearGrupo(grupo: Grupos): Grupos? {
-        return groupDao.insert(grupo)
+        //llamo a la funcion de crear grupo
+        return groupDao.crearGrupo(grupo)
     }
 
     override fun getById(id: Int): Grupos? {
@@ -18,15 +18,15 @@ class GroupService(private val groupDao: IDaoGroup) :IGruposService {
         TODO("Not yet implemented")
     }
 
-    override fun delete(id: Int) {
-        TODO("Not yet implemented")
+    override fun eliminarGrupo(id: Int) {
+        groupDao.eliminarGrupo(id)
     }
 
     override fun getAll(): List<Grupos>? {
         TODO("Not yet implemented")
     }
 
-    override fun actualizarmejorCtfs(grupo: Grupos, ctfs: List<Ctfs>?) {
+    override fun actualizarmejorCtfs(grupo: Grupos, ctfs: List<Ctfs>?):Grupos? {
         return groupDao.actualizarPosiciones(grupo,ctfs)
     }
 }
