@@ -1,6 +1,5 @@
-import DAO.IDaoGroup
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 import service.IGruposService
 
 

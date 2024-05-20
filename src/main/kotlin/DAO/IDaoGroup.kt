@@ -1,7 +1,7 @@
 package DAO
 
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 
 interface IDaoGroup {
     fun crearGrupo(grupo: Grupos): Grupos?
@@ -10,4 +10,5 @@ interface IDaoGroup {
     fun update(book: Grupos): Grupos?
     fun eliminarGrupo(id:Int): Boolean
     fun actualizarPosiciones(grupo: Grupos, ctfs: List<Ctfs>?):Grupos?
+    fun mostrarInformacionGrupo(id: Int?=null): List<Grupos>?
 }

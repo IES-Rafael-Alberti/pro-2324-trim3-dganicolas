@@ -1,9 +1,8 @@
 package consola
 
 import Iconsola
-import dataclass.Ctfs
-import dataclass.Grupos
-import service.ICtfsService
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 import service.IGruposService
 
 

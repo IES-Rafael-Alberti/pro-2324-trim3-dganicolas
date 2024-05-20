@@ -1,7 +1,7 @@
 package service
 
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 
 interface IGruposService {
     fun crearGrupo(grupo: Grupos): Grupos?
@@ -10,4 +10,5 @@ interface IGruposService {
     fun eliminarGrupo(id: Int)
     fun getAll(): List<Grupos>?
     fun actualizarmejorCtfs(grupo: Grupos, ctfs: List<Ctfs>?):Grupos?
+    fun mostrarInformacionGrupo(id:Int? = null): List<Grupos>?
 }

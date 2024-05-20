@@ -2,8 +2,8 @@ package DAO.SqlDao
 
 import DAO.IDaoGroup
 import Iconsola
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 import java.sql.SQLException
 import java.sql.Types
 import javax.sql.DataSource
@@ -97,7 +97,7 @@ class SqlDaoGroup(
      *  @return retorna el mejor ctfid o 0 si no hay ninguna participacion del grupo
      *  @author Nicolás De Gomar NO CHAT GPT :/
      * */
-    fun saberMejorCtf(ctfs: List<Ctfs>, codGrupo: Int): Int {
+    private fun saberMejorCtf(ctfs: List<Ctfs>, codGrupo: Int): Int {
         //este es el ctf en cual estamos analizando en el momento
         var ctfid = 0
         //esta es la posicion que mejor ha tenido
@@ -108,7 +108,7 @@ class SqlDaoGroup(
         var ctfdidmejor = 0
         //en el caso de que haya salido el grupo, dejo de sumar la posicion actual
         var hasalido = true
-
+//me lo ordena al revez quiero L REVEZ
         ctfs.sortedWith(compareBy({ it.ctfdId }, { it.puntuacion }, { it.grupoId })).forEach {
             if (it.ctfdId != ctfid) {
                 if (posicion < posicionActual) {
@@ -188,6 +188,24 @@ class SqlDaoGroup(
             consola.showMessage("no se encontro todos los ctfs")
             return null
         }
+    }
+    private fun filtrarSeleccion(id:Int? = null): List<Grupos>?{
+        val todosGrupos= getAll()
+        if(id != null){
+            val listaFiltro = emptyList<Grupos>().toMutableList()
+            todosGrupos.forEach {
+                if(it != null &&it.grupoId == id){
+                    listaFiltro.add(it)
+                }
+            }
+            return listaFiltro
+        }else{
+            return todosGrupos
+        }
+    }
+    override fun mostrarInformacionGrupo(id: Int?): List<Grupos>? {
+        val lista = filtrarSeleccion(id)
+        return lista
     }
 
 }

@@ -1,8 +1,8 @@
 package service
 
 import DAO.IDaoGroup
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 
 class GroupService(private val groupDao: IDaoGroup) :IGruposService {
     override fun crearGrupo(grupo: Grupos): Grupos? {
@@ -28,5 +28,9 @@ class GroupService(private val groupDao: IDaoGroup) :IGruposService {
 
     override fun actualizarmejorCtfs(grupo: Grupos, ctfs: List<Ctfs>?):Grupos? {
         return groupDao.actualizarPosiciones(grupo,ctfs)
+    }
+
+    override fun mostrarInformacionGrupo(id: Int?): List<Grupos>? {
+        return groupDao.mostrarInformacionGrupo(id)
     }
 }

@@ -1,7 +1,7 @@
 package service
 
 import DAO.IDaoCtf
-import dataclass.Ctfs
+import dataclassEntity.Ctfs
 
 class CtfService(private val ctfDao:IDaoCtf):ICtfsService {
     override fun anadirParticipacion(ctf: Ctfs): Ctfs? {
@@ -42,5 +42,10 @@ class CtfService(private val ctfDao:IDaoCtf):ICtfsService {
 
     override fun comprobarExistencia(ctf: Ctfs): Boolean {
         TODO("Not yet implemented")
+    }
+
+    override fun mostrarInformacionGrupo(Id: Int?): List<Ctfs>? {
+        //si me pasa un numero filtro y si no pues nulo
+        return ctfDao.mostrarInformacionGrupo(Id)
     }
 }

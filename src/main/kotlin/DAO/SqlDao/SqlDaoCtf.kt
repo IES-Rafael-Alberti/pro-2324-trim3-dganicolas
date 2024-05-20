@@ -2,8 +2,7 @@ package DAO.SqlDao
 
 import DAO.IDaoCtf
 import Iconsola
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
 import java.sql.SQLException
 import javax.sql.DataSource
 
@@ -139,6 +138,11 @@ class SqlDaoCtf(
             consola.showMessage("1 :error* insert query failed! (${e.message})")
             null
         }
+    }
+
+    override fun mostrarInformacionGrupo(id: Int?): List<Ctfs>? {
+        //llamo la getid y el solo me filtra si es numero o null
+        return getAll(id)
     }
 
     override fun comprobarExistencia(ctf: Ctfs): Boolean {

@@ -12,8 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.application
 import comprobadorArgumentos.ComprobadorArgs
 import consola.Consola
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 import dbConnection.DataSourceFactory
 import gestorFichero.GestorFicheros
 import service.CtfService
@@ -36,7 +36,7 @@ fun App() {
     }
 }
 
-//fun main(){
+//fun main() {
 //    //esto me sirve para ordenar los diccioanrios
 //    //puedo hacer un for que vaya cambiando y que cada vesz que cambie la clave del diccionario
 //    // se cambie de nuevo una variable valor,
@@ -47,33 +47,35 @@ fun App() {
 //        mutableMapOf(4 to mutableMapOf(1 to 2)),
 //        mutableMapOf(2 to mutableMapOf(1 to 2))
 //    )
-//
-//    val listaOrdenados = numero.sortedWith(compareBy({ it.keys.first() }, { it.values.first().keys.first() }, { it.values.first().values.first() }))
-//
+//    println(numero)
+//    val listaOrdenados = numero.sortedWith(
+//        compareBy({ it.keys.first() },
+//            { it.values.first().keys.first() },
+//            { it.values.first().values.first() })
+//    )
 //    println(listaOrdenados)
-//    var idctf=  1
+//    var idctf = 1
 //    var competicion = 0
 //    var posicion = 0
 //    var posicionactual = 0
 //    var contador = 0
-//    for (i in listaOrdenados){
-//        if (idctf != i.keys.first()){
-//            if(posicionactual < posicion){
+//    for (i in listaOrdenados) {
+//        if (idctf != i.keys.first()) {
+//            if (posicionactual < posicion) {
 //                competicion = idctf
 //                posicion = posicionactual
 //                contador = 0
 //                posicionactual = 0
-//                idctf= i.keys.first()
+//                idctf = i.keys.first()
 //            }
-//            contador ++
-//            val valores=listaOrdenados[idctf]
+//            contador++
+//            val valores = listaOrdenados[idctf]
 //            val grupo = valores.values.first()
-//            if (grupo.values.first() == 2){
+//            if (grupo.values.first() == 2) {
 //                posicionactual = contador
 //                println("el equipo ${grupo.values.first()} ha conseguido el puesto $contador")
 //            }
 //        }
-//
 //
 //
 //    }
@@ -87,10 +89,19 @@ fun App() {
  *
  * problema numero 2 20/05/2024 a la 6:43: estado no solucionado
  * como mi funcionana retorna algo TODAS, hacer que los mensajes de error o success se muestren en el main, asi la clase DAO se encarga de lo que tiene que hacer y no la sobvrecargo tontamente
+ *
+ * problema 3: implementar un daoFactory: estado no solucionado
+ *
+ * problema4: operation service, quitar todas las operaciones del main: estado no solucionado
+ *
+ * problema 5: sacar la base de datos a la raiz: estado no solucionado
+ *
+ * problema 6: tengo problemas con -c y -l : estado no solucionado
  * */
 
-fun main(args: Array<String>) = application {
+fun main() = application {
 
+    val args: Array<String> = arrayOf("-g","primeraPrueba")
     val ficheroConfiguracion = File("src/main/resources/config.init")
     val comprobador = ComprobadorArgs()
     val consola = Consola()
@@ -98,6 +109,7 @@ fun main(args: Array<String>) = application {
     val opcion = gestorFicheros.leerFicheroConfig(ficheroConfiguracion)
 
     val (fuenteDeDatoGroup, fuenteDeDatoCtfs) = when (opcion) {
+        //implementar un dao factory
         "SQL" -> Pair(
             SqlDaoGroup(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI), consola),
             SqlDaoCtf(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI), consola)
@@ -126,7 +138,7 @@ fun main(args: Array<String>) = application {
     fun crearGrupo() {//-g, esta bien realizada
         //esta funcion no se debe de tocar mas
         //funciona bien
-        for (i in 1..args.size) {
+        for (i in 1..(args.size-1)) {
             //compruebo al grupo
             val grupo: Grupos? = comprobador.comprobarGrupos(args[i])
             if (grupo != null) {
@@ -176,7 +188,7 @@ fun main(args: Array<String>) = application {
     fun eliminargrupo() {//-t
         //funcion no comprobada, no tocar a menos que a la hora de compilar de fallos
         //compruebo el grupo por si acaso el usuario me lo ha puesto erroneo
-        var grupo: Grupos? = try {
+        val grupo: Grupos? = try {
             comprobador.comprobarGrupos(args[1])
         } catch (e: IndexOutOfBoundsException) {
             null
@@ -246,65 +258,149 @@ fun main(args: Array<String>) = application {
         }
     }
 
-when (args[0]) {
 
-    //id	comando	Descripción
-    //1	-g <grupoId> <grupoDesc>
-    // Añade un nuevo grupo con <grupoid> y <grupodesc> en la tabla GRUPOS.
-    "-g" -> {
-        //esta funcion no se debe de tocar mas
-        crearGrupo()
-        //funciona bien
-    }
-    //terminado pero no probado
+    fun mostrarInformacionGrupoParticipacion() {
+        //5	-l <grupoId>	Si <grupoId>
+        // esta presente muestra la información del grupo <grupoId> y sus participaciones.
+        // Si el grupo no está presente muestra la información de todos los grupos.
 
-    //2	-p <ctfId> <grupoId> <puntuacion>
-    // Añade una participación del grupo <grupoid> en el CTF <ctfid>
-    // con la puntuación <puntuacion>. Si la participación del grupo <grupoid>
-    // en el CTF <ctfid> ya existe, actualiza la puntualización.
-    // En cualquiera de los casos, recalcula el campo mejorposCTFid
-    // de los grupos en la tabla GRUPOS.
-    "-p" -> {
-        //funcion comprobada no tocar o modificar
-        anadirParticipacion()
-    }
-    //terminado pero no probado
+        //el maestro metera el -l 1
 
-    //3	-t <grupoId>
-    // Elimina el grupo <grupoid> en la tabla GRUPOS,
-    // por tanto también elimina todas sus participaciones en los CTF.
-    "-t" -> {
-        eliminargrupo()
-    }
-    //4	-e <ctfId> <grupoId>
-    // Elimina la participación del grupo <grupoid> en el CTF <ctfid>.
-    // Si no existe la participación, no realiza nada.
-    // Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
-    "-e" -> {
-        eliminarSoloPArticipacion()
-    }
-
-//5	-l <grupoId>	Si <grupoId>
-// esta presente muestra la información del grupo <grupoId> y sus participaciones. Si el grupo no está presente muestra la información de todos los grupos.
-    if (args[0] == "-l") {
-
-    }
-//6	-c <ctfId>	Si <ctfId>
-// esta presente muestra la participación de los grupos y la puntuación obtenida, ordenado de mayor a menor puntuación.
-    if (args[0] == "-c") {
+        //arreglar todo
+        try {
+            val lista =
+                ctfService.mostrarInformacionGrupo(args[1].toInt())//esto puedo hacer la comprobacion antes de pasarlo y no tengo que comprobar tanto
+            if (lista != null) {
+                consola.showMessage("Procesado: Listado participación del grupo \"arreglarnombre\"")
+                consola.showMessage("GRUPO: ${args[1].toInt()}   arreglarnombre  MEJORCTF: *, Posición: *, Puntuación: **")
+                consola.showMessage(
+                    " CTF   | Puntuación | Posición\n" +
+                            "  -----------------------------"
+                )
+                lista.forEach {
+                    if(it.grupoId == args[1].toInt())
+                    consola.showMessage("    ${it.ctfdId} |       ${it.puntuacion}   |        ${it.grupoId}")
+                }
+            } else {
+                consola.showMessage("ERROR: al recoger todos los datos")
+            }
+        } catch (e: NumberFormatException) {
+            consola.showMessage("ERROR, el parametro -c debe de ir acompañado cn un numero entero")
+        } catch (e: IndexOutOfBoundsException) {
+            val lista = ctfService.mostrarInformacionGrupo()
+            if (lista != null) {
+                consola.showMessage("Procesado: Listado participación del grupo \"arreglarnombre\"")
+                consola.showMessage("GRUPO: ${args[1].toInt()}   arreglarnombre  MEJORCTF: *, Posición: *, Puntuación: **")
+                consola.showMessage(
+                    " CTF   | Puntuación | Posición\n" +
+                            "  -----------------------------"
+                )
+                lista.forEach {
+                    consola.showMessage("    ${it.ctfdId} |       ${it.puntuacion}   |        ${it.grupoId}")
+                }
+            } else {
+                consola.showMessage("ERROR: al recoger todos los datos")
+            }
+        }
 
     }
-//7	-f <filepath>
-    if (args[0] == "-f") {
 
+    fun mostrarInformacionDeUnCtf(){
+        //comprobar
+        val grupos = groupService.getAll()
+        val ctf = ctfService.escogerListaCtfOParteDeCtf(args[1].toInt())
+        val diccionario = emptyMap<String,Int>().toMutableMap()
+        if(grupos != null && ctf != null){
+            ctf.forEach{itCtf ->
+                diccionario[grupos.find{grupo -> grupo.grupoId == itCtf.grupoId }?.grupoDesc ?: ""] = itCtf.puntuacion
+            }
+            val diccionarioOrdenado = diccionario.toSortedMap(compareByDescending { it })
+            var primeraVez = true
+            for (i in diccionarioOrdenado){
+                if(primeraVez){
+                    primeraVez = false
+                    consola.showMessage("GRUPO GANADOR: ${i.key}  Mejor puntuación: ${i.value} Total participants: ${diccionarioOrdenado.size}\n" +
+                            "GRUPO   | Puntuación\n" +
+                            "--------------------")
+                }
+                consola.showMessage("${i.key} | ${i.value}")
+            }
+        }
+
+        //lo que hago aqui es retorna una lista donde tengo que sacar los datos de tipo asi
+    //solucionar
+    //Procesado: Listado participación en el CTF "1"
+        //  GRUPO GANADOR: 1DAM-G1  Mejor puntuación: 90 Total participants: 3
+//          GRUPO   | Puntuación
+//          --------------------
+        //  1DAM-G2 |       90
+        //  1DAM-G1 |       80
+        //  1DAM-G3 |       70
     }
-// Si <filepath> existe, será un fichero con un conjunto de comandos para procesamiento por lotes.
 
-//8	-i
-// Lanza la interface gráfica.
-    if (args[0] == "-i") {
+    when (args[0]) {
 
-    } else {
-        // mensaje de error
+        //id	comando	Descripción
+        //1	-g <grupoId> <grupoDesc>
+        // Añade un nuevo grupo con <grupoid> y <grupodesc> en la tabla GRUPOS.
+        "-g" -> {
+            //esta funcion no se debe de tocar mas
+            crearGrupo()
+            //funciona bien
+        }
+        //terminado pero no probado
+
+        //2	-p <ctfId> <grupoId> <puntuacion>
+        // Añade una participación del grupo <grupoid> en el CTF <ctfid>
+        // con la puntuación <puntuacion>. Si la participación del grupo <grupoid>
+        // en el CTF <ctfid> ya existe, actualiza la puntualización.
+        // En cualquiera de los casos, recalcula el campo mejorposCTFid
+        // de los grupos en la tabla GRUPOS.
+        "-p" -> {
+            //funcion comprobada no tocar o modificar
+            anadirParticipacion()
+        }
+        //terminado pero no probado
+
+        //3	-t <grupoId>
+        // Elimina el grupo <grupoid> en la tabla GRUPOS,
+        // por tanto también elimina todas sus participaciones en los CTF.
+        "-t" -> {
+            eliminargrupo()
+        }
+        //4	-e <ctfId> <grupoId>
+        // Elimina la participación del grupo <grupoid> en el CTF <ctfid>.
+        // Si no existe la participación, no realiza nada.
+        // Finalmente, recalcula el campo mejorposCTFid de los grupos en la tabla GRUPOS.
+        "-e" -> {
+            eliminarSoloPArticipacion()
+        }
+        //5	-l <grupoId>	Si <grupoId>
+        // esta presente muestra la información del grupo <grupoId> y sus participaciones.
+        // Si el grupo no está presente muestra la información de todos los grupos.
+        "-l" -> {
+            //el maestro me metera el -c 1
+            mostrarInformacionGrupoParticipacion()
+        }
+        //6	-c <ctfId>	Si <ctfId>
+        // esta presente muestra la participación de los grupos y la puntuación obtenida, ordenado de mayor a menor puntuación.
+        "-c" -> {
+            //siempre me pasara el ctfid
+            mostrarInformacionDeUnCtf()
+        }
+        //7	-f <filepath>
+        // Si <filepath> existe, será un fichero con un conjunto de comandos para procesamiento por lotes.
+        "-f" -> {
+
+        }
+        //8	-i
+        // Lanza la interface gráfica.
+        "-i" -> {
+
+        }
+
+        else -> {
+            // mensaje de error
+        }
     }
 }

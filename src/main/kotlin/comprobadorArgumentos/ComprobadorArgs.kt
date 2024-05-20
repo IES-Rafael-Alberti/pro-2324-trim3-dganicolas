@@ -1,7 +1,7 @@
 package comprobadorArgumentos
 
-import dataclass.Ctfs
-import dataclass.Grupos
+import dataclassEntity.Ctfs
+import dataclassEntity.Grupos
 
 class ComprobadorArgs : IcomprobadorArgs {
 
