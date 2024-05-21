@@ -62,7 +62,7 @@ fun main() = application {
     val consola = Consola()
     try {
 
-        val args: Array<String> = arrayOf("-f","src/main/resources/prueba.txt")
+        val args: Array<String> = arrayOf("-p","1;2;100")
         val ficheroConfiguracion = File("src/main/resources/config.init")
         val gestorFicheros = GestorFicheros()
         val opcion = gestorFicheros.leerFicheroConfig(ficheroConfiguracion)

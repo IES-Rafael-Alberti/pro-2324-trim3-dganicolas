@@ -16,17 +16,24 @@ class SqlDaoCtf(
             //abro conexi9on con la base de datos
             conexionBD.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    //le paso sus parametros
-                    stmt.setInt(1, ctf.ctfdId)
-                    stmt.setInt(2, ctf.grupoId)
-                    stmt.setInt(3, ctf.puntuacion)
-                    val rs = stmt.executeUpdate()
-                    //retorno el ctf en casop de que sea exitoso, si no un null indicando que es mala operacion
-                    if (rs == 1) {
-                        ctf
-                    } else {
-                        null
-                    }
+                    conn.commit()
+                    try{
+                       //le paso sus parametros
+                       stmt.setInt(1, ctf.ctfdId)
+                       stmt.setInt(2, ctf.grupoId)
+                       stmt.setInt(3, ctf.puntuacion)
+                       val rs = stmt.executeUpdate()
+                       //retorno el ctf en caso de que sea exitoso, si no un null indicando que es mala operacion
+                       if (rs == 1) {
+                           conn.commit()
+                           ctf
+                       } else {
+                           null
+                       }
+                   }catch (e:SQLException){
+                       conn.rollback()
+                       null
+                   }
                 }
             }
         } catch (e: SQLException) {
@@ -115,18 +122,25 @@ class SqlDaoCtf(
         return try {
             //abro conexion con la base de datos
             conexionBD.connection.use { conn ->
-                conn.prepareStatement(sql).use { stmt ->
-                    //le paso los parametros por orden
-                    stmt.setInt(1, ctf.puntuacion)
-                    stmt.setInt(2, ctf.ctfdId)
-                    stmt.setInt(3, ctf.grupoId)
-                    val rs = stmt.executeUpdate()
-                    //si ha habido un cambio exito en la operacion
-                    if (rs == 1) {
-                        ctf
-                    } else {
-                        null
+                conn.commit()
+                try{
+                    conn.prepareStatement(sql).use { stmt ->
+                        //le paso los parametros por orden
+                        stmt.setInt(1, ctf.puntuacion)
+                        stmt.setInt(2, ctf.ctfdId)
+                        stmt.setInt(3, ctf.grupoId)
+                        val rs = stmt.executeUpdate()
+                        //si ha habido un cambio exito en la operacion
+                        if (rs == 1) {
+                            conn.commit()
+                            ctf
+                        } else {
+                            null
+                        }
                     }
+                }catch (e:SQLException){
+                    conn.rollback()
+                    null
                 }
             }
         } catch (e: SQLException) {
@@ -165,14 +179,22 @@ class SqlDaoCtf(
         return try {
             //abro conexion al a base de datos y borro todos los registros
             conexionBD.connection.use { conn ->
-                conn.prepareStatement(sql).use { stmt ->
-                    stmt.setInt(1, id)
-                    //si las lineas afectadas es mayor o igual a una la operacion es un acierto
-                    if(stmt.executeUpdate() <=1){
-                        true
-                    }else{
-                        false
+                conn.commit()
+                try {
+                    conn.prepareStatement(sql).use { stmt ->
+
+                        stmt.setInt(1, id)
+                        //si las lineas afectadas es mayor o igual a una la operacion es un acierto
+                        if(stmt.executeUpdate() <=1){
+                            conn.commit()
+                            true
+                        }else{
+                            false
+                        }
                     }
+                }catch (e:SQLException){
+                    conn.rollback()
+                    false
                 }
             }
         } catch (e: SQLException) {
@@ -181,17 +203,24 @@ class SqlDaoCtf(
     }
 
     override fun eliminarParticipacionDeUnGrupoEnUnCtf(id: Int, ctfid: Int): Boolean {
-        val sql = "DELETE FROM CTFS WHERE GRUPOID = ? and CTFid = ?"
+        val sql = "DELETE FROM CTFS WHERE GRUPOID = ? and CTFID = ?"
         return try {
             conexionBD.connection.use { conn ->
-                conn.prepareStatement(sql).use { stmt ->
-                    stmt.setInt(1, id)
-                    stmt.setInt(2, ctfid)
-                    if(stmt.executeUpdate() ==1){
-                        true
-                    }else{
-                        false
+                conn.commit()
+                try {
+                    conn.prepareStatement(sql).use { stmt ->
+                        stmt.setInt(1, id)
+                        stmt.setInt(2, ctfid)
+                        if(stmt.executeUpdate() ==1){
+                            conn.commit()
+                            true
+                        }else{
+                            false
+                        }
                     }
+                }catch (e:SQLException){
+                    conn.rollback()
+                    false
                 }
             }
         } catch (e: SQLException) {

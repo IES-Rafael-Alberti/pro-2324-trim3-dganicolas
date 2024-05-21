@@ -22,7 +22,7 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
     }
 
     fun quehago(args: String): String {
-        if (args == "-g" || args == "-p" || args == "-t" || args == "-e" || args == "-l" || args == "-c" || args== "-f" || args == "-i") {
+        if (args == "-g" || args == "-p" || args == "-t" || args == "-e" || args == "-l" || args == "-c" || args == "-f" || args == "-i") {
             opcion = args
             return "procesado: activando instrucciones de $opcion"
         } else {
@@ -92,16 +92,17 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
     }
 
     fun realizando(operacion: String): String {
-        if (operacion.contains("#")|| operacion.isBlank()){
-            return ""
-        }else{
-            return quehago(operacion)
+        return if (operacion.contains("#") || operacion.isBlank()) {
+            ""
+        } else {
+            quehago(operacion)
         }
 
 
     }
 
     private fun comprobarGrupos(grupo: String): Grupos {
+        //tiene los commit correctamente
         return try {
             if (grupo.contains(";")) {
                 val lista = grupo.split(";")
@@ -121,12 +122,12 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
         //funciona bien
         //compruebo al grupo
         // si el grupo es distinto de nulo inserto el grupo
-        val existeGrupo= groupService.verificargrupo(grupo)
-        if(!existeGrupo){
+        val existeGrupo = groupService.verificargrupo(grupo)
+        if (!existeGrupo) {
             val grupoNuevo = groupService.crearGrupo(grupo)
             if (grupoNuevo != null) {
                 return "Procesado: Añadido el grupo \"${grupoNuevo.grupoDesc}\"."
-            }else{
+            } else {
                 throw MiPropioError("ERROR al crear  el grupo $grupo")
             }
         } else {
@@ -149,35 +150,40 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
         val ctf: Ctfs = comprobarCtfs(PrCtf)
         val grupo = groupService.getById(ctf.grupoId)
         // si el grupo no es nulo y existe actualiza su puntuacion
-        if (grupo != null){
+        if (grupo != null) {
             if (ctfService.comprobarExistencia(ctf)) {
 
                 //esta parte esta correcta
                 val puntuacionantigua =
                     ctfService.getAll(ctf.ctfdId)?.find { ctf.grupoId == it.grupoId }?.puntuacion ?: 0
-                val ctfActualizado = ctfService.actualizarPuntuacion(ctf)
 
-                if (ctfActualizado == null) {
-                    throw MiPropioError("no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} y ${ctf.puntuacion} a la BBDD")
-                }
+                val ctfActualizado = ctfService.actualizarPuntuacion(ctf)
+                    ?: throw MiPropioError(
+                        "no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} " +
+                                "y ${ctf.puntuacion} a la BBDD"
+                    )
+
                 return ("Procesado: Actualizada la participación del grupo" +
                         " \"${grupo.grupoDesc}\" en el CTF ${ctf.ctfdId}. " +
-                        "La puntuación cambió de  $puntuacionantigua a ${ctfActualizado.puntuacion} puntos.\n" + asignarMejorCtf(grupo))
+                        "La puntuación cambió de  $puntuacionantigua a ${ctfActualizado.puntuacion} puntos.\n" + asignarMejorCtf(
+                    grupo
+                ))
 
                 //si no lo que hace es crear una nueva participacion
             } else {
 
                 //esta parte tambien esta correcta
                 val ctfNuevo = ctfService.anadirParticipacion(ctf)
-                if (ctfNuevo == null) {
-                    throw MiPropioError("no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} y ${ctf.puntuacion} a la BBDD")
-                }
+                    ?: throw MiPropioError("no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} y ${ctf.puntuacion} a la BBDD")
+
                 return (" Procesado: Añadida participación del grupo " +
-                        "\"${grupo.grupoDesc}\" en el CTF ${ctfNuevo.ctfdId} con una puntuación de ${ctfNuevo.puntuacion} puntos.\n" + asignarMejorCtf(grupo))
+                        "\"${grupo.grupoDesc}\" en el CTF ${ctfNuevo.ctfdId} con una puntuación de ${ctfNuevo.puntuacion} puntos.\n" + asignarMejorCtf(
+                    grupo
+                ))
             }
 
-        }else{
-           throw MiPropioError("El equipo no existe")
+        } else {
+            throw MiPropioError("El equipo no existe")
         }
 
     }
@@ -204,8 +210,8 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
 
             val grupoEliminar = groupService.getById(args.toInt())
             if (grupoEliminar != null) {
-                val grupoModificado=groupService.eliminarCtf(grupoEliminar)
-                if (grupoModificado != null){
+                val grupoModificado = groupService.eliminarCtf(grupoEliminar)
+                if (grupoModificado != null) {
                     //escogo toda la lista de ctf, antes de eliminar
                     val lista = ctfService.getAll(args.toInt())
                     //elimino las participaciones del grupo en al tabla ctf, ME FUNCIONA ESTAS FUNCION NO TOCAR
@@ -213,10 +219,10 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
                     //elimino en este caso al grupo, FUNCIONA NO TOCAR
                     groupService.eliminarGrupo(grupoModificado.grupoId)
                     //muestro por consola el numero de participaciones eliminada y el grupo
-                    val registros=crearserie(lista)
+                    val registros = crearserie(lista)
 
                     return ("Procesado: Eliminada el grupo \"${grupoEliminar.grupoDesc}\" y su participación en los CTFs: ${registros}.")
-                }else{
+                } else {
                     throw MiPropioError("Error a la hora de eliminar al grupo ${grupoEliminar.grupoDesc}")
                 }
 
@@ -228,11 +234,12 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
         }
 
     }
+
     private fun asignarMejorCtf(grupo: Grupos): String {
-       val grupoActualizado=groupService.actualizarmejorCtfs(grupo, ctfService.getAll())
+        val grupoActualizado = groupService.actualizarmejorCtfs(grupo, ctfService.getAll())
         var serie = ""
         return if (grupoActualizado != null) {
-            if (grupoActualizado.mejorPosCTFId == null) {
+            if (grupoActualizado.mejorPosCTFId != null) {
                 serie += "\nel grupo ${grupoActualizado.grupoDesc} no tiene ninguna participacion despues de eliminar su unica participacion."
             } else {
                 serie += "\nel grupo ${grupoActualizado.grupoDesc} ahora su mejor ctf es ${grupoActualizado.mejorPosCTFId}"

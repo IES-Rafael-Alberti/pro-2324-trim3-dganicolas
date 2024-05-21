@@ -12,6 +12,7 @@ import javax.sql.DataSource
 class SqlDaoGroup(
     val conexionBD: DataSource
 ) : IDaoGroup {
+
     override fun crearGrupo(grupo: Grupos): Grupos? {
         //añadido: intentar que no se inserte grupos con mismo nombre
         //sentencia sql probada y funciona como se espera
@@ -20,36 +21,51 @@ class SqlDaoGroup(
             //abro conexion a la base datos
             conexionBD.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
+                    conn.commit()
                     //le insert oel nombre del grupo
-                    stmt.setString(1, grupo.grupoDesc)
-                    val rs = stmt.executeUpdate()
-                    //si ha habido un cambio, entonces operacion realizada correctamente
-                    if (rs == 1) {
-                        grupo
-                    } else {
+                    try{
+                        stmt.setString(1, grupo.grupoDesc)
+                        val rs = stmt.executeUpdate()
+                        //si ha habido un cambio, entonces operacion realizada correctamente
+                        if (rs == 1) {
+                            conn.commit()
+                            grupo
+                        } else {
+                            null
+                        }
+                    }catch (e:SQLException){
+                        conn.rollback()
                         null
                     }
                 }
             }
+
         } catch (e: SQLException) {
             null
         }
     }
 
     override fun eliminarCtf(grupo: Grupos): Grupos? {
-        val sql = "UPDATE GRUPOS set MEJORPOSCTFID = ? WHERE grupoId = ?"
+        val sql = "UPDATE GRUPOS set MEJORPOSCTFID = null WHERE grupoId = ?"
         return try {
             conexionBD.connection.use { conn ->
-                conn.prepareStatement(sql).use { stmt ->
-                    stmt.setNull(1,Types.INTEGER)
-                    stmt.setInt(2,grupo.grupoId)
-                    val rs = stmt.executeUpdate()
-                    if (rs == 1)  {
-                        return selectById(grupo.grupoId)
-                    } else {
-                        null
+                conn.commit()
+                try{
+                    conn.prepareStatement(sql).use { stmt ->
+                        stmt.setString(1,grupo.grupoId.toString())
+                        val rs = stmt.executeUpdate()
+                        if (rs == 1)  {
+                            conn.commit()
+                            return grupo
+                        } else {
+                            null
+                        }
                     }
+                }catch (e:SQLException){
+                    conn.rollback()
+                    null
                 }
+
             }
         } catch (e: SQLException) {
             null
@@ -167,29 +183,31 @@ class SqlDaoGroup(
         var hasalido = true
 //me lo ordena al revez quiero L REVEZ
         ctfs.sortedWith(compareBy({ it.ctfdId }, { it.puntuacion }, { it.grupoId })).forEach {
-            if (it.ctfdId != ctfid) {
-                if (posicion < posicionActual) {
-                    hasalido = true
-                    posicionActual = 0
-                    ctfid = it.ctfdId
-                } else {
-                    hasalido = true
-                    posicion = posicionActual
-                    posicionActual = 0
-                    ctfid = it.ctfdId
-                    ctfdidmejor = it.ctfdId
-                }
+            //if (it.ctfdId != ctfid) {
+            //    if (posicion < posicionActual) {
+            //        hasalido = true
+            //        posicionActual = 0
+            //        ctfid = it.ctfdId
+            //    } else {
+            //        ctfdidmejor = it.ctfdId
+            //        hasalido = true
+            //        posicion = posicionActual
+            //        posicionActual = 0
+//
+            //    }
+//
+            //}
+            //if (it.grupoId == codGrupo) {
+            //    hasalido = false
+            //}
+            //if (hasalido) {
+            //    posicionActual++
+            //}
 
-            }
-            if (it.grupoId == codGrupo) {
-                hasalido = false
-            }
-            if (hasalido) {
-                posicionActual++
-            }
+
 
         }
-        return ctfdidmejor
+        return ctfdidmejor-1
     }
 
     override fun actualizarPosiciones(grupo: Grupos, ctfs: List<Ctfs>?):Grupos? {
@@ -197,7 +215,6 @@ class SqlDaoGroup(
             // si me retorna 0 es que no hay ninguna participacion
             val mejorctf = saberMejorCtf(ctfs, grupo.grupoId)
             //sentencia sql no probada
-            val sql = "update grupos set MEJORPOSCTFID = ? WHERE GRUPOID = ?"
             if(mejorctf == 0){
                 //no hay ninguna participacion del grupo
                 return try {
@@ -225,10 +242,11 @@ class SqlDaoGroup(
                     return null
                 }
             }else{
+                val sql = "update grupos set MEJORPOSCTFID = ? WHERE GRUPOID = ?"
                 return try {
                     conexionBD.connection.use { conn ->
                         conn.prepareStatement(sql).use { stmt ->
-                            stmt.setInt(1, mejorctf)
+                            stmt.setObject(1, mejorctf)
                             stmt.setInt(2, grupo.grupoId)
                             val rs = stmt.executeQuery()
                             //si ha habido un cambio, entonces operacion realizada correctamente

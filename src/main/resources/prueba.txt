@@ -7,17 +7,17 @@
 
 # Añade/Actualiza participaciones, podrá tener tantas líneas como quiera
 -p
-1;1;100
+1;2;100
 1;2;90
-1;3;80
+1;2;80
 
 # Elimina el grupo y sus participaciones, podrá tener tantas líneas como quiera.
 -t
 1
 
-# Elimina participación, podrá tener tantas líneas como quiera.
+# Elimina participación, podrá tener tantas líneas como quiera.e <ctfId> <grupoId>
 -e
-1;3
+1;2
 
 # Listado de participaciones, podrá tener tantas líneas como quiera.
 -l
