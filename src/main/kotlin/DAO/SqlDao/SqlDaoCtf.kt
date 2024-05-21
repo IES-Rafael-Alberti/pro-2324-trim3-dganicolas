@@ -8,7 +8,6 @@ import javax.sql.DataSource
 
 class SqlDaoCtf(
     val conexionBD: DataSource,
-    val consola: Iconsola
 ) : IDaoCtf {
     override fun anadirParticipacion(ctf: Ctfs): Ctfs? {
         //sentencia sql no probada
@@ -26,13 +25,11 @@ class SqlDaoCtf(
                     if (rs == 1) {
                         ctf
                     } else {
-                        consola.showMessage("error insert query failed! ($rs records inserted)")
                         null
                     }
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("1 :error* insert query failed! (${e.message})")
             null
         }
     }
@@ -90,7 +87,7 @@ class SqlDaoCtf(
     }
 
     override fun selectById(id: Int): Ctfs? {
-        val sql = "SELECT * FROM ctfs WHERE ctfs = ?"
+        val sql = "SELECT * FROM ctfs WHERE CTFid = ?"
         return try {
             conexionBD.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
@@ -108,7 +105,6 @@ class SqlDaoCtf(
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("3: error* insert query failed! (${e.message})")
             null
         }
     }
@@ -129,13 +125,11 @@ class SqlDaoCtf(
                     if (rs == 1) {
                         ctf
                     } else {
-                        consola.showMessage("error insert query failed! ($rs records inserted)")
                         null
                     }
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("1 :error* insert query failed! (${e.message})")
             null
         }
     }
@@ -156,7 +150,6 @@ class SqlDaoCtf(
                     if (rs.next()) {
                         true
                     } else {
-                        consola.showMessage("error insert query failed! ($rs records inserted)")
                         false
                     }
                 }
@@ -164,10 +157,6 @@ class SqlDaoCtf(
         } catch (e: SQLException) {
             false
         }
-    }
-
-    override fun update(book: Ctfs): Ctfs? {
-        TODO("Not yet implemented")
     }
 
     override fun eliminarParticipacion(id: Int): Boolean {
@@ -179,11 +168,14 @@ class SqlDaoCtf(
                 conn.prepareStatement(sql).use { stmt ->
                     stmt.setInt(1, id)
                     //si las lineas afectadas es mayor o igual a una la operacion es un acierto
-                    (stmt.executeUpdate() <=1)
+                    if(stmt.executeUpdate() <=1){
+                        true
+                    }else{
+                        false
+                    }
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("error al eliminar la participacion de ctf $id")
             false
         }
     }
@@ -195,11 +187,14 @@ class SqlDaoCtf(
                 conn.prepareStatement(sql).use { stmt ->
                     stmt.setInt(1, id)
                     stmt.setInt(2, ctfid)
-                    (stmt.executeUpdate() ==1)
+                    if(stmt.executeUpdate() ==1){
+                        true
+                    }else{
+                        false
+                    }
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("error al eliminar la participacion del grupo  $id en el ctf de $ctfid")
             false
         }
     }

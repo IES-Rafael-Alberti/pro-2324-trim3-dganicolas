@@ -11,11 +11,15 @@ class GroupService(private val groupDao: IDaoGroup) :IGruposService {
     }
 
     override fun getById(id: Int): Grupos? {
-        TODO("Not yet implemented")
+        return groupDao.selectById(id)
     }
 
-    override fun update(grupo: Grupos): Grupos? {
-        TODO("Not yet implemented")
+    override fun eliminarCtf(grupo: Grupos): Grupos? {
+        return groupDao.eliminarCtf(grupo)
+    }
+
+    override fun verificargrupo(grupo: Grupos): Boolean {
+        return groupDao.verificarGrupo(grupo)
     }
 
     override fun eliminarGrupo(id: Int) {
@@ -23,7 +27,7 @@ class GroupService(private val groupDao: IDaoGroup) :IGruposService {
     }
 
     override fun getAll(): List<Grupos>? {
-        TODO("Not yet implemented")
+        return groupDao.getAll()
     }
 
     override fun actualizarmejorCtfs(grupo: Grupos, ctfs: List<Ctfs>?):Grupos? {

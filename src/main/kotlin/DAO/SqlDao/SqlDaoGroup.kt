@@ -1,6 +1,7 @@
 package DAO.SqlDao
 
 import DAO.IDaoGroup
+import Errores.MiPropioError
 import Iconsola
 import dataclassEntity.Ctfs
 import dataclassEntity.Grupos
@@ -9,8 +10,7 @@ import java.sql.Types
 import javax.sql.DataSource
 
 class SqlDaoGroup(
-    val conexionBD: DataSource,
-    val consola: Iconsola
+    val conexionBD: DataSource
 ) : IDaoGroup {
     override fun crearGrupo(grupo: Grupos): Grupos? {
         //añadido: intentar que no se inserte grupos con mismo nombre
@@ -36,9 +36,49 @@ class SqlDaoGroup(
         }
     }
 
+    override fun eliminarCtf(grupo: Grupos): Grupos? {
+        val sql = "UPDATE GRUPOS set MEJORPOSCTFID = ? WHERE grupoId = ?"
+        return try {
+            conexionBD.connection.use { conn ->
+                conn.prepareStatement(sql).use { stmt ->
+                    stmt.setNull(1,Types.INTEGER)
+                    stmt.setInt(2,grupo.grupoId)
+                    val rs = stmt.executeUpdate()
+                    if (rs == 1)  {
+                        return selectById(grupo.grupoId)
+                    } else {
+                        null
+                    }
+                }
+            }
+        } catch (e: SQLException) {
+            null
+        }
+    }
+
 
     override fun getAll(): List<Grupos>? {
-        TODO("Not yet implemented")
+        val lista = emptyList<Grupos>().toMutableList()
+        val sql = "SELECT * FROM grupos"
+        return try {
+            conexionBD.connection.use { conn ->
+                conn.prepareStatement(sql).use { stmt ->
+                    val rs = stmt.executeQuery()
+                    if (rs.next()) {
+                        lista.add(Grupos(
+                            grupoId = rs.getInt("GRUPOID"),
+                            grupoDesc = rs.getString("GRUPODESC"),
+                            mejorPosCTFId = rs.getInt("MEJORPOSCTFID")
+                        ))
+                    } else {
+                        null
+                    }
+                    return lista
+                }
+            }
+        } catch (e: SQLException) {
+            null
+        }
     }
 
 
@@ -47,7 +87,7 @@ class SqlDaoGroup(
         return try {
             conexionBD.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    stmt.setString(1, id.toString())
+                    stmt.setInt(1, id)
                     val rs = stmt.executeQuery()
                     if (rs.next()) {
                         Grupos(
@@ -61,15 +101,28 @@ class SqlDaoGroup(
                 }
             }
         } catch (e: SQLException) {
-            consola.showMessage("3: error* insert query failed! (${e.message})")
             null
         }
     }
 
-    override fun update(book: Grupos): Grupos? {
-        TODO("Not yet implemented")
+    override fun verificarGrupo(grupo: Grupos): Boolean {
+        val sql = "SELECT * FROM grupos WHERE grupodesc = ?"
+        return try {
+            conexionBD.connection.use { conn ->
+                conn.prepareStatement(sql).use { stmt ->
+                    stmt.setString(1, grupo.grupoDesc)
+                    val rs = stmt.executeQuery()
+                    if (rs.next()) {
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+        } catch (e: SQLException) {
+            throw MiPropioError("ERROR: no se pudo verificar si el grupo existe, no se introduce el grupo")
+        }
     }
-
 
     override fun eliminarGrupo(id: Int): Boolean {
         //sentencia sql no probada
@@ -77,15 +130,19 @@ class SqlDaoGroup(
         return try {
             conexionBD.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
-                    //le insert oel nombre del grupo
+                    //le insert el nombre del grupo
                     stmt.setInt(1, id)
                     val rs = stmt.executeUpdate()
                     //si ha habido un cambio, entonces operacion realizada correctamente
-                    (rs == 1)
+                    if(rs == 1){
+                        true
+                    }else{
+                        false
+                    }
                 }
             }
         }catch (e:SQLException){
-            consola.showMessage("ERROR al eliminar el grupo con id $id")
+            conexionBD.connection.rollback()
             return false
         }
     }
@@ -145,56 +202,63 @@ class SqlDaoGroup(
                 //no hay ninguna participacion del grupo
                 return try {
                     //abro conexion con la base de datos
+                    val sql2 = "update grupos set MEJORPOSCTFID = null WHERE GRUPOID = ?"
                     conexionBD.connection.use { conn ->
-                        conn.prepareStatement(sql).use { stmt ->
+                        conn.prepareStatement(sql2).use { stmt ->
                             //el valor es de tipo integer pero es nulo
-                            stmt.setNull(1, Types.INTEGER)
-                            stmt.setInt(2, grupo.grupoId)
-                            val rs = stmt.executeUpdate()
+                            stmt.setInt(1, grupo.grupoId)
+                            val rs = stmt.executeQuery()
                             //si ha habido un cambio, entonces operacion realizada correctamente
-                            if (rs == 1){
-                                grupo
+                            if (rs.next()){
+                                Grupos(
+                                    grupoId =rs.getInt("grupoId"),
+                                    grupoDesc = rs.getString("grupodesc"),
+                                    mejorPosCTFId = rs.getInt("mejorPosCTFId")
+
+                                )
                             }else{
                                 null
                             }
                         }
                     }
                 }catch (e:SQLException){
-                    consola.showMessage("ERROR al actualizar el grupo con id ${grupo.grupoId}")
                     return null
                 }
             }else{
                 return try {
                     conexionBD.connection.use { conn ->
                         conn.prepareStatement(sql).use { stmt ->
-                            stmt.setNull(1, mejorctf)
+                            stmt.setInt(1, mejorctf)
                             stmt.setInt(2, grupo.grupoId)
-                            val rs = stmt.executeUpdate()
+                            val rs = stmt.executeQuery()
                             //si ha habido un cambio, entonces operacion realizada correctamente
-                            if (rs == 1){
-                                grupo
+                            if (rs.next()){
+                                Grupos(
+                                    grupoId =rs.getInt("grupoId"),
+                                    grupoDesc = rs.getString("grupodesc"),
+                                    mejorPosCTFId = rs.getInt("mejorPosCTFId")
+
+                                )
                             }else{
                                 null
                             }
                         }
                     }
                 }catch (e:SQLException){
-                    consola.showMessage("ERROR al eliminar el grupo con id ${grupo.grupoId}")
                     return null
                 }
             }
 
         } else {
-            consola.showMessage("no se encontro todos los ctfs")
             return null
         }
     }
     private fun filtrarSeleccion(id:Int? = null): List<Grupos>?{
         val todosGrupos= getAll()
-        if(id != null){
+        if(id != null && todosGrupos != null){
             val listaFiltro = emptyList<Grupos>().toMutableList()
             todosGrupos.forEach {
-                if(it != null &&it.grupoId == id){
+                if(it.grupoId == id){
                     listaFiltro.add(it)
                 }
             }

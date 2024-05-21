@@ -41,7 +41,7 @@ class CtfService(private val ctfDao:IDaoCtf):ICtfsService {
     }
 
     override fun comprobarExistencia(ctf: Ctfs): Boolean {
-        TODO("Not yet implemented")
+        return ctfDao.comprobarExistencia(ctf)
     }
 
     override fun mostrarInformacionGrupo(Id: Int?): List<Ctfs>? {
