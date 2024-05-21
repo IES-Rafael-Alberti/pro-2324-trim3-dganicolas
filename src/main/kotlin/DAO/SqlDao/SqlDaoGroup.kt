@@ -23,7 +23,7 @@ class SqlDaoGroup(
                 conn.prepareStatement(sql).use { stmt ->
                     conn.commit()
                     //le insert oel nombre del grupo
-                    try{
+                    try {
                         stmt.setString(1, grupo.grupoDesc)
                         val rs = stmt.executeUpdate()
                         //si ha habido un cambio, entonces operacion realizada correctamente
@@ -33,7 +33,7 @@ class SqlDaoGroup(
                         } else {
                             null
                         }
-                    }catch (e:SQLException){
+                    } catch (e: SQLException) {
                         conn.rollback()
                         null
                     }
@@ -50,18 +50,18 @@ class SqlDaoGroup(
         return try {
             conexionBD.connection.use { conn ->
                 conn.commit()
-                try{
+                try {
                     conn.prepareStatement(sql).use { stmt ->
-                        stmt.setString(1,grupo.grupoId.toString())
+                        stmt.setString(1, grupo.grupoId.toString())
                         val rs = stmt.executeUpdate()
-                        if (rs == 1)  {
+                        if (rs == 1) {
                             conn.commit()
                             return grupo
                         } else {
                             null
                         }
                     }
-                }catch (e:SQLException){
+                } catch (e: SQLException) {
                     conn.rollback()
                     null
                 }
@@ -81,11 +81,13 @@ class SqlDaoGroup(
                 conn.prepareStatement(sql).use { stmt ->
                     val rs = stmt.executeQuery()
                     if (rs.next()) {
-                        lista.add(Grupos(
-                            grupoId = rs.getInt("GRUPOID"),
-                            grupoDesc = rs.getString("GRUPODESC"),
-                            mejorPosCTFId = rs.getInt("MEJORPOSCTFID")
-                        ))
+                        lista.add(
+                            Grupos(
+                                grupoId = rs.getInt("GRUPOID"),
+                                grupoDesc = rs.getString("GRUPODESC"),
+                                mejorPosCTFId = rs.getInt("MEJORPOSCTFID")
+                            )
+                        )
                     } else {
                         null
                     }
@@ -150,14 +152,14 @@ class SqlDaoGroup(
                     stmt.setInt(1, id)
                     val rs = stmt.executeUpdate()
                     //si ha habido un cambio, entonces operacion realizada correctamente
-                    if(rs == 1){
+                    if (rs == 1) {
                         true
-                    }else{
+                    } else {
                         false
                     }
                 }
             }
-        }catch (e:SQLException){
+        } catch (e: SQLException) {
             conexionBD.connection.rollback()
             return false
         }
@@ -203,92 +205,96 @@ class SqlDaoGroup(
             //if (hasalido) {
             //    posicionActual++
             //}
-
-
-
-        }
-        return ctfdidmejor-1
-    }
-
-    override fun actualizarPosiciones(grupo: Grupos, ctfs: List<Ctfs>?):Grupos? {
-        if (ctfs != null) {
-            // si me retorna 0 es que no hay ninguna participacion
-            val mejorctf = saberMejorCtf(ctfs, grupo.grupoId)
-            //sentencia sql no probada
-            if(mejorctf == 0){
-                //no hay ninguna participacion del grupo
-                return try {
-                    //abro conexion con la base de datos
-                    val sql2 = "update grupos set MEJORPOSCTFID = null WHERE GRUPOID = ?"
-                    conexionBD.connection.use { conn ->
-                        conn.prepareStatement(sql2).use { stmt ->
-                            //el valor es de tipo integer pero es nulo
-                            stmt.setInt(1, grupo.grupoId)
-                            val rs = stmt.executeQuery()
-                            //si ha habido un cambio, entonces operacion realizada correctamente
-                            if (rs.next()){
-                                Grupos(
-                                    grupoId =rs.getInt("grupoId"),
-                                    grupoDesc = rs.getString("grupodesc"),
-                                    mejorPosCTFId = rs.getInt("mejorPosCTFId")
-
-                                )
-                            }else{
-                                null
-                            }
-                        }
-                    }
-                }catch (e:SQLException){
-                    return null
+            if (it.ctfdId != ctfid) {
+                if (posicion < posicionActual) {
+                    hasalido = true
+                    posicionActual = 0
+                    ctfid = it.ctfdId
                 }
-            }else{
-                val sql = "update grupos set MEJORPOSCTFID = ? WHERE GRUPOID = ?"
-                return try {
-                    conexionBD.connection.use { conn ->
-                        conn.prepareStatement(sql).use { stmt ->
-                            stmt.setObject(1, mejorctf)
-                            stmt.setInt(2, grupo.grupoId)
-                            val rs = stmt.executeQuery()
-                            //si ha habido un cambio, entonces operacion realizada correctamente
-                            if (rs.next()){
-                                Grupos(
-                                    grupoId =rs.getInt("grupoId"),
-                                    grupoDesc = rs.getString("grupodesc"),
-                                    mejorPosCTFId = rs.getInt("mejorPosCTFId")
+                return ctfdidmejor - 1
+            }
 
-                                )
-                            }else{
-                                null
+            override fun actualizarPosiciones(grupo: Grupos, ctfs: List<Ctfs>?): Grupos? {
+                if (ctfs != null) {
+                    // si me retorna 0 es que no hay ninguna participacion
+                    val mejorctf = saberMejorCtf(ctfs, grupo.grupoId)
+                    //sentencia sql no probada
+                    if (mejorctf == 0) {
+                        //no hay ninguna participacion del grupo
+                        return try {
+                            //abro conexion con la base de datos
+                            val sql2 = "update grupos set MEJORPOSCTFID = null WHERE GRUPOID = ?"
+                            conexionBD.connection.use { conn ->
+                                conn.prepareStatement(sql2).use { stmt ->
+                                    //el valor es de tipo integer pero es nulo
+                                    stmt.setInt(1, grupo.grupoId)
+                                    val rs = stmt.executeQuery()
+                                    //si ha habido un cambio, entonces operacion realizada correctamente
+                                    if (rs.next()) {
+                                        Grupos(
+                                            grupoId = rs.getInt("grupoId"),
+                                            grupoDesc = rs.getString("grupodesc"),
+                                            mejorPosCTFId = rs.getInt("mejorPosCTFId")
+
+                                        )
+                                    } else {
+                                        null
+                                    }
+                                }
                             }
+                        } catch (e: SQLException) {
+                            return null
+                        }
+                    } else {
+                        val sql = "update grupos set MEJORPOSCTFID = ? WHERE GRUPOID = ?"
+                        return try {
+                            conexionBD.connection.use { conn ->
+                                conn.prepareStatement(sql).use { stmt ->
+                                    stmt.setObject(1, mejorctf)
+                                    stmt.setInt(2, grupo.grupoId)
+                                    val rs = stmt.executeQuery()
+                                    //si ha habido un cambio, entonces operacion realizada correctamente
+                                    if (rs.next()) {
+                                        Grupos(
+                                            grupoId = rs.getInt("grupoId"),
+                                            grupoDesc = rs.getString("grupodesc"),
+                                            mejorPosCTFId = rs.getInt("mejorPosCTFId")
+
+                                        )
+                                    } else {
+                                        null
+                                    }
+                                }
+                            }
+                        } catch (e: SQLException) {
+                            return null
                         }
                     }
-                }catch (e:SQLException){
+
+                } else {
                     return null
                 }
             }
 
-        } else {
-            return null
-        }
-    }
-    private fun filtrarSeleccion(id:Int? = null): List<Grupos>?{
-        val todosGrupos= getAll()
-        if(id != null && todosGrupos != null){
-            val listaFiltro = emptyList<Grupos>().toMutableList()
-            todosGrupos.forEach {
-                if(it.grupoId == id){
-                    listaFiltro.add(it)
+            private fun filtrarSeleccion(id: Int? = null): List<Grupos>? {
+                val todosGrupos = getAll()
+                if (id != null && todosGrupos != null) {
+                    val listaFiltro = emptyList<Grupos>().toMutableList()
+                    todosGrupos.forEach {
+                        if (it.grupoId == id) {
+                            listaFiltro.add(it)
+                        }
+                    }
+                    return listaFiltro
+                } else {
+                    return todosGrupos
                 }
             }
-            return listaFiltro
-        }else{
-            return todosGrupos
-        }
-    }
-    override fun mostrarInformacionGrupo(id: Int?): List<Grupos>? {
-        val lista = filtrarSeleccion(id)
-        return lista
-    }
 
-}
+            override fun mostrarInformacionGrupo(id: Int?): List<Grupos>? {
+                val lista = filtrarSeleccion(id)
+                return lista
+            }
+
+        }
 
