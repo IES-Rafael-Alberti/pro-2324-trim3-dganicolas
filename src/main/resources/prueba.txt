@@ -1,0 +1,28 @@
+# Comentario de la línea. Las opciones son: -g, -p, -t, -e, -l, -c, y pueden o no estar en fichero. 
+# Crea grupos, podrá tener tantas líneas como quiera
+-g
+1;1DAM-G1
+1;1DAM-G2
+1;1DAM-G3
+
+# Añade/Actualiza participaciones, podrá tener tantas líneas como quiera
+-p
+1;1;100
+1;2;90
+1;3;80
+
+# Elimina el grupo y sus participaciones, podrá tener tantas líneas como quiera.
+-t
+1
+
+# Elimina participación, podrá tener tantas líneas como quiera.
+-e
+1;3
+
+# Listado de participaciones, podrá tener tantas líneas como quiera.
+-l
+1
+
+# Listado de grupos y puntuaciones, podrá tener tantas líneas como quiera.
+-c
+1
