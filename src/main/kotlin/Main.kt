@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.application
 import consola.Consola
+import dataclassEntity.Grupos
 import gestorFichero.GestorFicheros
 import service.CtfService
 import service.GroupService

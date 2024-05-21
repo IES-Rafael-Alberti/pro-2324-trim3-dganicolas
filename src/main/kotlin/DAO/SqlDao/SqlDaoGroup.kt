@@ -154,51 +154,56 @@ class SqlDaoGroup(
      *  @return retorna el mejor ctfid o 0 si no hay ninguna participacion del grupo
      *  @author Nicolás De Gomar NO CHAT GPT :/
      * */
-    private fun saberMejorCtf(ctfs: List<Ctfs>, codGrupo: Int): Int {
+    private fun saberMejorCtf(ctfs: List<Ctfs>, codGrupo: Int): Int? {
         //este es el ctf en cual estamos analizando en el momento
         var ctfid = 0
-        //esta es la posicion que mejor ha tenido
-        var posicion = 0
+        var posicion= 0
         //esta es la posicion en la cual estoy analizando del ctf actual
-        var posicionActual = 0
+        var posicionActual:Int = 1
         //este es el mejor ctf que ha tenido ese grupo
-        var ctfdidmejor = 0
+        var ctfdidmejor :MutableMap<Int,Int> = emptyMap<Int,Int>().toMutableMap()
         //en el caso de que haya salido el grupo, dejo de sumar la posicion actual
         var hasalido = true
+        var primeraVez = true
 //me lo ordena al revez quiero L REVEZ
-        ctfs.sortedWith(compareBy({ it.ctfdId }, { it.puntuacion }, { it.grupoId })).forEach {
+        ctfs.sortedWith(compareByDescending<Ctfs> { it.puntuacion }.thenBy { it.ctfdId }.thenBy { it.grupoId }).forEach {
             if (it.ctfdId != ctfid) {
-                if (posicion < posicionActual) {
-                    hasalido = true
-                    posicionActual = 0
-                    ctfid = it.ctfdId
-                } else {
-                    hasalido = true
-                    posicion = posicionActual
-                    posicionActual = 0
-                    ctfid = it.ctfdId
-                    ctfdidmejor = it.ctfdId
-                }
-
+                ctfid = it.ctfdId
+                hasalido = true
+                posicionActual = 1
             }
             if (it.grupoId == codGrupo) {
+                ctfdidmejor[it.ctfdId] = posicionActual
                 hasalido = false
             }
-            if (hasalido) {
-                posicionActual++
+            posicionActual += 1
+        }
+        var mejorctf:Int? = null
+        for (i in ctfdidmejor){
+            if (primeraVez){
+                primeraVez = false
+                posicion = 0
+                mejorctf = i.key
+            }else{
+                if(posicion > i.value){
+                    mejorctf = i.key
+                }
             }
 
         }
-        return ctfdidmejor
+        println(ctfdidmejor)
+        println(mejorctf)
+        return mejorctf
     }
 
     override fun actualizarPosiciones(grupo: Grupos, ctfs: List<Ctfs>?):Grupos? {
-        if (ctfs != null) {
+        return if (ctfs != null) {
             // si me retorna 0 es que no hay ninguna participacion
             val mejorctf = saberMejorCtf(ctfs, grupo.grupoId)
+            println(mejorctf)
             //sentencia sql no probada
-            val sql = "update grupos set MEJORPOSCTFID = ? WHERE GRUPOID = ?"
-            if(mejorctf == 0){
+
+            if(mejorctf == null){
                 //no hay ninguna participacion del grupo
                 return try {
                     //abro conexion con la base de datos
@@ -206,51 +211,45 @@ class SqlDaoGroup(
                     conexionBD.connection.use { conn ->
                         conn.prepareStatement(sql2).use { stmt ->
                             //el valor es de tipo integer pero es nulo
-                            stmt.setInt(1, grupo.grupoId)
-                            val rs = stmt.executeQuery()
+                            stmt.setObject(1, grupo.grupoId)
+                            val rs = stmt.executeUpdate()
                             //si ha habido un cambio, entonces operacion realizada correctamente
-                            if (rs.next()){
-                                Grupos(
-                                    grupoId =rs.getInt("grupoId"),
-                                    grupoDesc = rs.getString("grupodesc"),
-                                    mejorPosCTFId = rs.getInt("mejorPosCTFId")
-
-                                )
+                            if (rs == 1){
+                                conn.commit()
+                                selectById(grupo.grupoId)
                             }else{
                                 null
                             }
                         }
                     }
                 }catch (e:SQLException){
-                    return null
+                    null
                 }
             }else{
-                return try {
+                val sql = "update grupos set MEJORPOSCTFID = ? WHERE GRUPOID = ?"
+                try {
                     conexionBD.connection.use { conn ->
+                        conn.commit()
                         conn.prepareStatement(sql).use { stmt ->
                             stmt.setInt(1, mejorctf)
                             stmt.setInt(2, grupo.grupoId)
-                            val rs = stmt.executeQuery()
+                            val rs = stmt.executeUpdate()
                             //si ha habido un cambio, entonces operacion realizada correctamente
-                            if (rs.next()){
-                                Grupos(
-                                    grupoId =rs.getInt("grupoId"),
-                                    grupoDesc = rs.getString("grupodesc"),
-                                    mejorPosCTFId = rs.getInt("mejorPosCTFId")
-
-                                )
+                            if (rs == 1){
+                                conn.commit()
+                                selectById(grupo.grupoId)
                             }else{
                                 null
                             }
                         }
                     }
                 }catch (e:SQLException){
-                    return null
+                   null
                 }
             }
 
         } else {
-            return null
+            null
         }
     }
     private fun filtrarSeleccion(id:Int? = null): List<Grupos>?{

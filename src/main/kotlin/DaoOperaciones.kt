@@ -229,7 +229,8 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
 
     }
     private fun asignarMejorCtf(grupo: Grupos): String {
-       val grupoActualizado=groupService.actualizarmejorCtfs(grupo, ctfService.getAll())
+        val lista = ctfService.getAll()
+       val grupoActualizado=groupService.actualizarmejorCtfs(grupo,lista )
         var serie = ""
         return if (grupoActualizado != null) {
             if (grupoActualizado.mejorPosCTFId == null) {
@@ -289,8 +290,8 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
                             "\n CTF   | Puntuación | Posición\n" +
                             "  -----------------------------"
                     lista.forEach {
-                        if (it.grupoId == args[1].toInt())
-                            serie += "    ${it.ctfdId} |       ${it.puntuacion}   |        ${it.grupoId}\n"
+                        if (it.grupoId == args.toInt())
+                            serie += "\n    ${it.ctfdId} |       ${it.puntuacion}   |        ${it.grupoId}\n"
                     }
                     return serie
                 } else {
