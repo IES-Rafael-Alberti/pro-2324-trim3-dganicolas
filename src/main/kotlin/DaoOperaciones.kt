@@ -286,12 +286,12 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
                 val grupo = groupService.getById(args.toInt())
                 if (grupo != null) {
                     var serie = "Procesado: Listado participación del grupo \"${grupo.grupoDesc}\"" +
-                            "\nGRUPO: ${grupo.grupoId}   arreglarnombre  MEJORCTF: ${grupo.mejorPosCTFId}, Posición: *, Puntuación: **" +
+                            "\nGRUPO: ${grupo.grupoId}   arreglarnombre  MEJORCTF: ${grupo.mejorPosCTFId}, Posición: **, Puntuación: ${lista.find { it.ctfdId == grupo.mejorPosCTFId }?.puntuacion?:"error"}" +
                             "\n CTF   | Puntuación | Posición\n" +
                             "  -----------------------------"
                     lista.forEach {
                         if (it.grupoId == args.toInt())
-                            serie += "\n    ${it.ctfdId} |       ${it.puntuacion}   |        ${it.grupoId}\n"
+                            serie += "\n    ${it.ctfdId} |       ${it.puntuacion}   |        **\n"
                     }
                     return serie
                 } else {
@@ -314,8 +314,8 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
             val diccionario = emptyMap<String, Int>().toMutableMap()
             if (grupos != null && ctf != null) {
                 ctf.forEach { itCtf ->
-                    diccionario[grupos.find { grupo -> grupo.grupoId == itCtf.grupoId }?.grupoDesc ?: ""] =
-                        itCtf.puntuacion
+                        diccionario[grupos.find { grupo -> grupo.grupoId == itCtf.grupoId }?.grupoDesc ?: ""] =
+                            itCtf.puntuacion
                 }
                 val diccionarioOrdenado = diccionario.toSortedMap(compareByDescending { it })
                 var primeraVez = true
@@ -324,11 +324,14 @@ class DaoOperaciones(val ctfService: ICtfsService, val groupService: IGruposServ
                     if (primeraVez) {
                         primeraVez = false
                         serie +=
-                            "GRUPO GANADOR: ${i.key}  Mejor puntuación: ${i.value} Total participants: ${diccionarioOrdenado.size}\n" +
+                            "GRUPO GANADOR: ${i.key}  Mejor puntuacion: ${i.value} Total participants: ${diccionarioOrdenado.size}\n" +
                                     "GRUPO   | Puntuación\n" +
                                     "--------------------"
                     }
-                    serie += "${i.key} | ${i.value}"
+                    serie += "\n${i.key} | ${i.value}"
+                }
+                if(diccionarioOrdenado.isEmpty()){
+                    serie = "No se encontraron registros del ctfid $args"
                 }
                 return serie
             } else {

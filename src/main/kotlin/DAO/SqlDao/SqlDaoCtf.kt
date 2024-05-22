@@ -49,7 +49,7 @@ class SqlDaoCtf(
 
                     while (rs.next()) {
                         //si el numero es nulo, meto todos los registros
-                        if (numero == null)
+                        if (numero == null){
                             ctfs.add(
                                 Ctfs(
                                     ctfdId = rs.getInt("CTFID"),
@@ -57,7 +57,8 @@ class SqlDaoCtf(
                                     puntuacion = rs.getInt("PUNTUACION")
                                 )
                             )
-                        //si no lo que hago es que solo meyto en la lista los numeros que sean igual al numero que parametro
+                            //si no lo que hago es que solo meyto en la lista los numeros que sean igual al numero que parametro
+                        }
                         else {
                             //declaro el grupo
                             val ctf = Ctfs(
@@ -66,7 +67,7 @@ class SqlDaoCtf(
                                 puntuacion = rs.getInt("PUNTUACION")
                             )
                             // si la id del grupo es igual al numero entonces se añade
-                            if (numero == ctf.grupoId) {
+                            if (numero == ctf.ctfdId) {
                                 ctfs.add(ctf)
                             }
                         }
@@ -135,8 +136,52 @@ class SqlDaoCtf(
     }
 
     override fun mostrarInformacionGrupo(id: Int?): List<Ctfs>? {
-        //llamo la getid y el solo me filtra si es numero o null
-        return getAll(id)
+        val sql = "SELECT * FROM ctfs"
+        try {
+            //abro la conexion con la base de datos
+            conexionBD.connection.use { conn ->
+                conn.prepareStatement(sql).use { stmt ->
+                    val rs = stmt.executeQuery()
+                    //me hago una lista que metere todos los registros de la BD
+                    val ctfs = mutableListOf<Ctfs>()
+
+                    while (rs.next()) {
+                        //si el numero es nulo, meto todos los registros
+                        if (id == null)
+                            ctfs.add(
+                                Ctfs(
+                                    ctfdId = rs.getInt("CTFID"),
+                                    grupoId = rs.getInt("GRUPOID"),
+                                    puntuacion = rs.getInt("PUNTUACION")
+                                )
+                            )
+                        //si no lo que hago es que solo meyto en la lista los numeros que sean igual al numero que parametro
+                        else {
+                            //declaro el grupo
+                            val ctf = Ctfs(
+                                ctfdId = rs.getInt("CTFID"),
+                                grupoId = rs.getInt("GRUPOID"),
+                                puntuacion = rs.getInt("PUNTUACION")
+                            )
+                            // si la id del grupo es igual al numero entonces se añade
+                            if (id == ctf.grupoId) {
+                                ctfs.add(ctf)
+                            }
+                        }
+                    }
+                    //retorno si hay minimo un registro
+                    return if (ctfs.isNotEmpty()) {
+                        ctfs
+                        //retorno un nulo indicando que no hay ningun registro
+                    } else {
+                        null
+                    }
+
+                }
+            }
+        } catch (e: SQLException) {
+            return null
+        }
     }
 
     override fun comprobarExistencia(ctf: Ctfs): Boolean {

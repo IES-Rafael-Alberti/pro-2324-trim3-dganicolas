@@ -64,13 +64,14 @@ class SqlDaoGroup(
             conexionBD.connection.use { conn ->
                 conn.prepareStatement(sql).use { stmt ->
                     val rs = stmt.executeQuery()
-                    if (rs.next()) {
+                    while (rs.next()) {
                         lista.add(Grupos(
                             grupoId = rs.getInt("GRUPOID"),
                             grupoDesc = rs.getString("GRUPODESC"),
                             mejorPosCTFId = rs.getInt("MEJORPOSCTFID")
                         ))
-                    } else {
+                    }
+                    if(lista.isNotEmpty()){
                         null
                     }
                     return lista
