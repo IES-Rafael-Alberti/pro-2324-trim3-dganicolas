@@ -8,7 +8,7 @@ interface IGestorFicheros {
      * @param info La información a escribir en el fichero.
      * @return Verdadero si la escritura fue exitosa, falso de lo contrario.
      */
-    fun escribir(fichero: File, info: List<String>): Boolean
+    fun escribir(fichero: File, lista: List<String>): Boolean
 
     /**
      * Lee el contenido de un fichero y retorna una lista de strings, donde cada elemento representa una línea del fichero.
