@@ -11,5 +11,5 @@ interface ICtfsService {
     fun getAll(id:Int? = null): List<Ctfs>?
     fun actualizarPuntuacion(ctf: Ctfs): Ctfs?
     fun comprobarExistencia(ctf: Ctfs): Boolean
-    fun mostrarInformacionGrupo(Id: Int? = null): List<Ctfs>?
+    fun mostrarInformacionGrupo(id: Int? = null): List<Ctfs>?
 }

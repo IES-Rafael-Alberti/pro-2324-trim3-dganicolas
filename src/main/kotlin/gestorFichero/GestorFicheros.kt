@@ -1,11 +1,10 @@
 package gestorFichero
 
-import IGestorFicheros
 import androidx.compose.runtime.toMutableStateList
 import java.io.File
 
 class GestorFicheros: IGestorFicheros {
-    override fun escribir(fichero: File, lista: List<String>): Boolean {
+    override fun escribir(fichero: File, lista: List<String>) {
         if (fichero.exists()){
             fichero.writeText("")
             var contador = 0
@@ -29,15 +28,13 @@ class GestorFicheros: IGestorFicheros {
                 }
             }
         }
-
-        return true
     }
 
     override fun leer(fichero: File): MutableList<String> {
-        if(fichero.canRead()){
-            return fichero.readLines().toMutableStateList()
+        return if(fichero.canRead()){
+            fichero.readLines().toMutableStateList()
         }else{
-            return mutableListOf()
+            emptyList<String>().toMutableList()
         }
 
     }
@@ -46,17 +43,17 @@ class GestorFicheros: IGestorFicheros {
         val lista = fichero.readLines().toList()
         lista.forEach{
             if (it.contains("tipo=")){
-                try{
+                return try{
                     if(it.split("=")[1] == "SQL"||
                         it.split("=")[1] == "JSON"||
                         it.split("=")[1] == "XML"||
                         it.split("=")[1] == "TXT"){
-                        return it.split("=")[1]
+                        it.split("=")[1]
                     }else{
-                        return "null"
+                        "null"
                     }
                 }catch (e:IndexOutOfBoundsException){
-                    return "null"
+                    "null"
                 }
             }
         }

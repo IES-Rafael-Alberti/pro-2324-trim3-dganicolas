@@ -1,5 +1,5 @@
-import DAOFactory.DaoFactory
-import UI.Interfaz.InterfazGrafica
+import daoFactory.DaoFactory
+import ui.interfaz.InterfazGrafica
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.application
 import consola.Consola
 import gestorFichero.GestorFicheros
-import UI.IinterfazGrafica.IinterfazGrafica
+import ui.iInterfazGrafica.IinterfazGrafica
 import service.CtfService
 import service.GroupService
 import service.ICtfsService
@@ -60,7 +60,7 @@ fun App() {
  * */
 fun main(args: Array<String>) = application {
     val consola = Consola()
-    val ficheroConfiguracion = File("src/main/resources/config.init")
+    val ficheroConfiguracion = File("config.init")
     val gestorFicheros = GestorFicheros()
     val opcion = gestorFicheros.leerFicheroConfig(ficheroConfiguracion)
     if(opcion != "null"){
@@ -76,18 +76,22 @@ fun main(args: Array<String>) = application {
         if (operaciones.leyendo) {
             if(argumentos[1]!="null"){
                 val fichero = gestorFicheros.leer(File(argumentos[1]))
-                operaciones.queHago(argumentos[0])
-                for (instruccion in fichero) {
-                    operaciones.actualizarTodo()
-                    val resultado = operaciones.realizando(instruccion)
-                    consola.showMessage(resultado)
+                if(fichero.isNotEmpty()){
+                    operaciones.queHago(argumentos[0])
+                    for (instruccion in fichero) {
+                        operaciones.actualizarTodo()
+                        val resultado = operaciones.realizando(instruccion)
+                        consola.showMessage(resultado)
+                    }
+                }else{
+                    consola.showMessage("el fichero no existe o esta vacio")
                 }
             }else{
                 consola.showMessage("Error en la opcion ${argumentos[0]}")
             }
         } else {
             if( (argumentos[0] == "-i" || argumentos[0] == "-l") || argumentos[1]!="null" ){
-                for (i in 1..argumentos.size-1) {
+                for (i in 1..<argumentos.size) {
                     operaciones.actualizarTodo()
                     val resultado = operaciones.realizando(argumentos[i])
                     consola.showMessage(resultado)

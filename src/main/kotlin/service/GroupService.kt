@@ -1,6 +1,6 @@
 package service
 
-import DAO.IDAO.IDaoGroup
+import dao.iDao.IDaoGroup
 import dataclassEntity.Ctfs
 import dataclassEntity.Grupos
 

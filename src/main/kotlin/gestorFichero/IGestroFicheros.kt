@@ -1,3 +1,5 @@
+package gestorFichero
+
 import java.io.File
 
 interface IGestorFicheros {
@@ -5,10 +7,10 @@ interface IGestorFicheros {
      * Escribe información en un fichero especificado. Si el fichero no existe, no se crea automáticamente.
      *
      * @param fichero El fichero en el que se desea escribir.
-     * @param info La información a escribir en el fichero.
+     * @param lista La información a escribir en el fichero.
      * @return Verdadero si la escritura fue exitosa, falso de lo contrario.
      */
-    fun escribir(fichero: File, lista: List<String>): Boolean
+    fun escribir(fichero: File, lista: List<String>)
 
     /**
      * Lee el contenido de un fichero y retorna una lista de strings, donde cada elemento representa una línea del fichero.
