@@ -1,8 +1,6 @@
 package DAO.SqlDao
 
-import DAO.IDaoGroup
-import Errores.MiPropioError
-import Iconsola
+import DAO.IDAO.IDaoGroup
 import dataclassEntity.Ctfs
 import dataclassEntity.Grupos
 import java.sql.SQLException
@@ -72,7 +70,7 @@ class SqlDaoGroup(
                         ))
                     }
                     if(lista.isNotEmpty()){
-                        null
+                        return null
                     }
                     return lista
                 }
@@ -121,7 +119,7 @@ class SqlDaoGroup(
                 }
             }
         } catch (e: SQLException) {
-            throw MiPropioError("ERROR: no se pudo verificar si el grupo existe, no se introduce el grupo")
+            false
         }
     }
 
@@ -160,22 +158,19 @@ class SqlDaoGroup(
         var ctfid = 0
         var posicion= 0
         //esta es la posicion en la cual estoy analizando del ctf actual
-        var posicionActual:Int = 1
+        var posicionActual = 1
         //este es el mejor ctf que ha tenido ese grupo
-        var ctfdidmejor :MutableMap<Int,Int> = emptyMap<Int,Int>().toMutableMap()
+        val ctfdidmejor :MutableMap<Int,Int> = emptyMap<Int,Int>().toMutableMap()
         //en el caso de que haya salido el grupo, dejo de sumar la posicion actual
-        var hasalido = true
         var primeraVez = true
 //me lo ordena al revez quiero L REVEZ
         ctfs.sortedWith(compareByDescending<Ctfs> { it.puntuacion }.thenBy { it.ctfdId }.thenBy { it.grupoId }).forEach {
             if (it.ctfdId != ctfid) {
                 ctfid = it.ctfdId
-                hasalido = true
                 posicionActual = 1
             }
             if (it.grupoId == codGrupo) {
                 ctfdidmejor[it.ctfdId] = posicionActual
-                hasalido = false
             }
             posicionActual += 1
         }
@@ -192,8 +187,6 @@ class SqlDaoGroup(
             }
 
         }
-        println(ctfdidmejor)
-        println(mejorctf)
         return mejorctf
     }
 
@@ -201,7 +194,6 @@ class SqlDaoGroup(
         return if (ctfs != null) {
             // si me retorna 0 es que no hay ninguna participacion
             val mejorctf = saberMejorCtf(ctfs, grupo.grupoId)
-            println(mejorctf)
             //sentencia sql no probada
 
             if(mejorctf == null){

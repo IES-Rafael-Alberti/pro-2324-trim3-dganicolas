@@ -1,4 +1,4 @@
-package DAO
+package DAO.IDAO
 
 import dataclassEntity.Ctfs
 import dataclassEntity.Grupos

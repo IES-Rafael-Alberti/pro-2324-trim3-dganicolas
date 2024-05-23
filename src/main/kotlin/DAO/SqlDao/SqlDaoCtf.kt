@@ -1,7 +1,6 @@
 package DAO.SqlDao
 
-import DAO.IDaoCtf
-import Iconsola
+import DAO.IDAO.IDaoCtf
 import dataclassEntity.Ctfs
 import java.sql.SQLException
 import javax.sql.DataSource

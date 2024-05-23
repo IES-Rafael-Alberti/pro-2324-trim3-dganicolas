@@ -1,9 +1,9 @@
 package service
 
-import DAO.IDaoCtf
+import DAO.IDAO.IDaoCtf
 import dataclassEntity.Ctfs
 
-class CtfService(private val ctfDao:IDaoCtf):ICtfsService {
+class CtfService(private val ctfDao: IDaoCtf):ICtfsService {
     override fun anadirParticipacion(ctf: Ctfs): Ctfs? {
         return ctfDao.anadirParticipacion(ctf)
     }
@@ -15,11 +15,6 @@ class CtfService(private val ctfDao:IDaoCtf):ICtfsService {
 
     override fun escogerUnSoloCtf(id: Int): Ctfs? {
         return ctfDao.selectById(id)
-    }
-
-
-    override fun update(ctfs: Ctfs): Ctfs? {
-        TODO("Not yet implemented")
     }
 
     override fun eliminarParticipacion(id: Int):Boolean {

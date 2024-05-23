@@ -1,5 +1,5 @@
 import DAOFactory.DaoFactory
-import Errores.MiPropioError
+import UI.Interfaz.InterfazGrafica
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -11,8 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.application
 import consola.Consola
-import dataclassEntity.Grupos
 import gestorFichero.GestorFicheros
+import UI.IinterfazGrafica.IinterfazGrafica
 import service.CtfService
 import service.GroupService
 import service.ICtfsService
@@ -58,44 +58,46 @@ fun App() {
  *
  *
  * */
-
-fun main() = application {
+fun main(args: Array<String>) = application {
     val consola = Consola()
-    try {
-
-        val args: Array<String> = arrayOf("-f","src/main/resources/prueba.txt")
-        val ficheroConfiguracion = File("src/main/resources/config.init")
-        val gestorFicheros = GestorFicheros()
-        val opcion = gestorFicheros.leerFicheroConfig(ficheroConfiguracion)
+    val ficheroConfiguracion = File("src/main/resources/config.init")
+    val gestorFicheros = GestorFicheros()
+    val opcion = gestorFicheros.leerFicheroConfig(ficheroConfiguracion)
+    if(opcion != "null"){
         val daoFactory = DaoFactory()
         val fuenteDeDatoGroup = daoFactory.asignarDaoGroup(opcion)
         val fuenteDeDatoCtfs = daoFactory.asignarDaoCtf(opcion)
         val ctfService: ICtfsService = CtfService(fuenteDeDatoCtfs)
         val groupService: IGruposService = GroupService(fuenteDeDatoGroup)
-        val operaciones = DaoOperaciones(ctfService, groupService)
-        operaciones.queOpcionEs(args)
+        val interfazGrafica: IinterfazGrafica = InterfazGrafica(groupService, ctfService, gestorFicheros)
+        val operaciones = daoFactory.asignarDaoOperaciones(opcion,groupService,ctfService,interfazGrafica)
+        val argumentos = operaciones.comprobarArgumentos(args)
+        operaciones.queOpcionEs(argumentos)
         if (operaciones.leyendo) {
-            val fichero = gestorFicheros.leer(File(args[1]))
-            operaciones.quehago(args[0])
-            for (instruccion in fichero) {
-                try {
+            if(argumentos[1]!="null"){
+                val fichero = gestorFicheros.leer(File(argumentos[1]))
+                operaciones.queHago(argumentos[0])
+                for (instruccion in fichero) {
+                    operaciones.actualizarTodo()
                     val resultado = operaciones.realizando(instruccion)
                     consola.showMessage(resultado)
-                } catch (e: MiPropioError) {
-                    consola.showMessage(e.message.toString())
                 }
+            }else{
+                consola.showMessage("Error en la opcion ${argumentos[0]}")
             }
         } else {
-            for (i in 1..args.size - 1) {
-                try {
-                    val resultado = operaciones.realizando(args[i])
+            if( (argumentos[0] == "-i" || argumentos[0] == "-l") || argumentos[1]!="null" ){
+                for (i in 1..argumentos.size-1) {
+                    operaciones.actualizarTodo()
+                    val resultado = operaciones.realizando(argumentos[i])
                     consola.showMessage(resultado)
-                } catch (e: MiPropioError) {
-                    consola.showMessage(e.message.toString())
                 }
+            }else{
+                consola.showMessage("Error en la opcion ${argumentos[0]}")
             }
         }
-    } catch (e:MiPropioError) {
-        consola.showMessage(e.message.toString())
+    }else{
+        consola.showMessage("ERROR: configuracion en el fichero init.config")
     }
+
 }
