@@ -241,8 +241,10 @@ class OperacionesSql(
             }
 
             //si es menor pues retorno nulo
-            else
+            else{
                 null
+            }
+
         } catch (e: NumberFormatException) {
 
             //retorno nulo al caos de que me haya puesto una cosa que no sea numero
