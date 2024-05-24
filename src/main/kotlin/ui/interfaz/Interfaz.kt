@@ -2,7 +2,7 @@ package ui.interfaz
 
 
 
-import ui.Interfaz.IinterfazGrafica
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

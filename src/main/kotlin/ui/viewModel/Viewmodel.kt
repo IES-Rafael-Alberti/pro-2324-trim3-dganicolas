@@ -50,7 +50,6 @@ class ViewModel(private val serviceGroup: IGruposService, val service: ICtfsServ
     }
 
     fun exportar(){
-        _textoExportar.value = "exportando..."
         val listaAexporta = mutableListOf<String>()
         var ctfid:Int? = null
         var contador = 1
@@ -65,7 +64,5 @@ class ViewModel(private val serviceGroup: IGruposService, val service: ICtfsServ
                 listaAexporta.add("$contador. ${serviceGroup.getById(it.grupoId)?.grupoDesc} (${it.puntuacion} puntos)")
             }
         fichero.escribir(File("src/main/resources/ctfs.txt"),listaAexporta)
-        Thread.sleep(1000)
-        _textoExportar.value = "exportar"
     }
 }

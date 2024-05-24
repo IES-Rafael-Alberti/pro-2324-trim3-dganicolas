@@ -1,11 +1,11 @@
-package DAOFactory
+package daoFactory
 
-import DAO.IDAO.IDAOOperaciones
-import DAO.JSONDAO.OperacionesJSON
-import DAO.SqlDao.OperacionesSql
-import DAO.TxtDao.OperacionesTxt
-import DAO.XmlDao.OperacionesXml
+
+import dao.iDao.IDAOOperaciones
 import dao.iDao.IDaoCtf
+import dao.jsonDao.OperacionesJSON
+import dao.txtDao.OperacionesTxt
+import dao.sqlDao.OperacionesSql
 import dao.iDao.IDaoGroup
 import dao.jsonDao.JsonCtfDao
 import dao.jsonDao.JsonGruposDao
@@ -13,9 +13,10 @@ import dao.sqlDao.SqlDaoCtf
 import dao.sqlDao.SqlDaoGroup
 import dao.txtDao.TxtCtfDao
 import dao.txtDao.TxtGruposDao
+import dao.xmlDao.OperacionesXml
 import dao.xmlDao.XmlCtfDao
 import dao.xmlDao.XmlGruposDao
-import ui.Interfaz.IinterfazGrafica
+import ui.interfaz.IinterfazGrafica
 import dbConnection.DataSourceFactory
 import service.ICtfsService
 import service.IGruposService

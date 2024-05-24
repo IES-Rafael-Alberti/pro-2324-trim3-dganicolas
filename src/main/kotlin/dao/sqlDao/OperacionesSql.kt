@@ -1,8 +1,8 @@
-package DAO.SqlDao
+package dao.sqlDao
 
-import DAO.IDAO.IDAOOperaciones
-import ui.Interfaz.IinterfazGrafica
+import ui.interfaz.IinterfazGrafica
 import androidx.compose.runtime.*
+import dao.iDao.IDAOOperaciones
 import dataclassEntity.Ctfs
 import dataclassEntity.Grupos
 import service.ICtfsService
@@ -99,9 +99,9 @@ class OperacionesSql(
                 }
                 //8	-i
                 // Lanza la interface gráfica.
-                //"-i" -> {
-
-                //}
+                "-i" -> {
+                    return ("abriendo pantalla")
+                }
 
                 else -> {
                     return ("comando desconocido")

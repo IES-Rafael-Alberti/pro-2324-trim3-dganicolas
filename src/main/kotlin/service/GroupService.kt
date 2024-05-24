@@ -4,6 +4,7 @@ import dao.iDao.IDaoGroup
 import dataclassEntity.Ctfs
 import dataclassEntity.Grupos
 
+
 class GroupService(private val groupDao: IDaoGroup) :IGruposService {
     override fun crearGrupo(grupo: Grupos): Grupos? {
         //llamo a la funcion de crear grupo

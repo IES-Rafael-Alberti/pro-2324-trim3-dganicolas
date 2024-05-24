@@ -1,4 +1,4 @@
-package ui.Interfaz
+package ui.interfaz
 
 import androidx.compose.runtime.Composable
 

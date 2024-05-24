@@ -1,5 +1,4 @@
 
-import DAOFactory.DaoFactory
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -11,12 +10,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.application
 import consola.Consola
+import daoFactory.DaoFactory
 import gestorFichero.GestorFicheros
 import service.CtfService
 import service.GroupService
 import service.ICtfsService
 import service.IGruposService
-import ui.Interfaz.IinterfazGrafica
+import ui.interfaz.IinterfazGrafica
 import ui.interfaz.InterfazGrafica
 import ui.viewModel.ViewModel
 import java.io.File

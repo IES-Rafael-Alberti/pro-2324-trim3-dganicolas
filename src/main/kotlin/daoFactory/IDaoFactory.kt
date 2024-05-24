@@ -1,9 +1,9 @@
-package DAOFactory
+package daoFactory
 
-import DAO.IDAO.IDAOOperaciones
+import dao.iDao.IDAOOperaciones
 import dao.iDao.IDaoCtf
 import dao.iDao.IDaoGroup
-import ui.Interfaz.IinterfazGrafica
+import ui.interfaz.IinterfazGrafica
 import service.ICtfsService
 import service.IGruposService
 
