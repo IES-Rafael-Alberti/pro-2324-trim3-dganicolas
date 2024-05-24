@@ -11,17 +11,10 @@ import ui.interfaz.InterfazGrafica
 import ui.viewModel.ViewModel
 import java.io.File
 
-/**
- * notas:
- *
- * problema 7: si me ponen un -p mal, el programa casca cuando solo le introdusco -p 2 o -p 2;3, pero uand oel pongo -p reacciona bien: estado no solucionado
- *
- * problema 8: cuando pongo -g sin nada el programa no pone ningun mensaje de error pero no casca: estado no solucionado 21/05 0:45: estado no solucionado
- *
- *problema 9 21/05 0:51: el parametro -t si le pongo una letra, me tiene que mostrar un error tipo, el parametro debe de ser un numeor positivo
- *
- *
- * */
+
+//el fichero lo exporto a resources ctfs.txt
+
+//te lo he documentado asi para que sea anti ia
 fun main(args: Array<String>) = application {
     //instancion la consola
     val consola = Consola()
