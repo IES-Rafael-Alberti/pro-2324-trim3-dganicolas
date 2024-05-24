@@ -109,7 +109,7 @@ class ViewModel(
                 //añado a la lista una linea con el nombre del grupo y su puntuacion
                 listaAexporta.add("$contador. ${serviceGroup.getById(it.grupoId)?.grupoDesc} (${it.puntuacion} puntos)")
             }
-        //despues de terminar el for each, lo que hago es pasarle esa lista al gestor de archivos
+        //despues  de terminar el for each, lo que hago es pasarle esa lista al gestor de archivos
         _textoExportar.value = "exportado"
         fichero.escribir(File("src/main/resources/ctfs.txt"), listaAexporta)
     }
