@@ -1,7 +1,8 @@
 package ui.interfaz
 
 
-import ui.iInterfazGrafica.IinterfazGrafica
+
+import ui.Interfaz.IinterfazGrafica
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,35 +16,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
-import dataclassEntity.Ctfs
-import dataclassEntity.Grupos
-import gestorFichero.IGestorFicheros
-import service.ICtfsService
-import service.IGruposService
-import java.io.File
+import ui.viewModel.ViewModel
 
 
-class InterfazGrafica(private val serviceGroup: IGruposService, val service: ICtfsService, private val fichero: IGestorFicheros) :
+
+class InterfazGrafica(val viewmodel: ViewModel) :
     IinterfazGrafica {
 
     @Composable
     override fun mostrarPantalla() {
-        mostrar()
-    }
+        val estado = viewmodel.estado.value
+        val textoExportar = viewmodel.textoExportar.value
+        val texto = viewmodel.texto.value
+        val lista = viewmodel.lista.value
 
-    @Composable
-    private fun mostrar() {
-        var estado by remember { mutableStateOf(true) }
-        var texto by remember { mutableStateOf("") }
-        var lista by remember { mutableStateOf(serviceGroup.getAll()) }
         if (estado) {
-            Window(onCloseRequest = { estado = false }) {
+            Window(onCloseRequest = { viewmodel.cambiarEstado(false) }) {
                 MaterialTheme {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
-                        ) {
+                    ) {
                         LazyColumn {
                             item {
                                 Text("    grupoId   |   grupoDesc   |   mejorPosCTFId    ")
@@ -55,32 +49,21 @@ class InterfazGrafica(private val serviceGroup: IGruposService, val service: ICt
                                 }
                             }
 
-                            }
+                        }
                         Row{
                             OutlinedTextField(
                                 value = texto,
-                                onValueChange = { texto = it },
+                                onValueChange = {valor:String -> viewmodel.cambiartexto(valor) },
                                 label = { Text("ID GRUPO") }
                             )
                             Button(
                                 onClick = {
                                     if (texto == "") {
-                                        lista = serviceGroup.getAll()
+                                        viewmodel.cogertodo()
                                     }else{
-
-                                        lista = if (texto.toIntOrNull() != null){
-                                            val grupo = serviceGroup.getById(texto.toInt())
-                                            if(grupo != null){
-                                                listOf(grupo)
-                                            }else{
-                                                listOf(Grupos(404,"ERROR: Grupo no existe", null))
-                                            }
-
-                                        }else{
-                                            listOf(Grupos(404,"Grupo no existe", null))
-                                        }
+                                        viewmodel.cogerungrupo()
                                     }
-                                    texto = ""
+                                    viewmodel.cambiartexto("")
                                 }
                             ) {
                                 Text("Buscar Grupo")
@@ -88,23 +71,10 @@ class InterfazGrafica(private val serviceGroup: IGruposService, val service: ICt
                         }
                         Button(
                             onClick = {
-                                val listaAexporta = mutableListOf<String>()
-                                var ctfid:Int? = null
-                                var contador = 1
-                                service.getAll()
-                                    ?.sortedWith(compareBy<Ctfs> {it.ctfdId  }.thenBy { it.grupoId }.thenBy { it.puntuacion })
-                                    ?.forEach {
-                                    if(ctfid!= it.ctfdId){
-                                        ctfid = it.ctfdId
-                                        contador = 1
-                                        listaAexporta.add("CTF: $ctfid")
-                                    }
-                                    listaAexporta.add("$contador. ${serviceGroup.getById(it.grupoId)?.grupoDesc} (${it.puntuacion} puntos)")
-                                                                    }
-                                fichero.escribir(File("src/main/resources/ctfs.txt"),listaAexporta)
+                                viewmodel.exportar()
                             }
                         ) {
-                            Text("Exportar Lista")
+                            Text(textoExportar)
                         }
                     }
 
@@ -112,7 +82,7 @@ class InterfazGrafica(private val serviceGroup: IGruposService, val service: ICt
             }
         }
     }
-}
+    }
 
 /**
 Por defecto mostrará la información de todos los grupos (grupoid, grupodesc, mejorposCTFid).

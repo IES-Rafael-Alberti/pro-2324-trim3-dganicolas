@@ -1,7 +1,7 @@
-package dao.sqlDao
+package DAO.SqlDao
 
-import dao.iDao.IDAOOperaciones
-import ui.iInterfazGrafica.IinterfazGrafica
+import DAO.IDAO.IDAOOperaciones
+import ui.Interfaz.IinterfazGrafica
 import androidx.compose.runtime.*
 import dataclassEntity.Ctfs
 import dataclassEntity.Grupos
@@ -22,7 +22,7 @@ class OperacionesSql(
             leyendo = true
             opcion = "-f"
         } else {
-            if (args[0] == "-g" || args[0] == "-p" || args[0] == "-t" || args[0] == "-e" || args[0] == "-l" || args[0] == "-c" || args[0] == "-i") {
+            if (args[0] == "-g" || args[0] == "-p" || args[0] == "-t" || args[0] == "-e" || args[0] == "-l" || args[0] == "-c" || args[0] == "-f" || args[0] == "-i") {
                 opcion = args[0]
                 if (opcion == "-i") {
                     intefarzGrafica()
@@ -99,9 +99,9 @@ class OperacionesSql(
                 }
                 //8	-i
                 // Lanza la interface gráfica.
-                "-i" -> {
-                    return "mostrando pantalla"
-                }
+                //"-i" -> {
+
+                //}
 
                 else -> {
                     return ("comando desconocido")
@@ -113,10 +113,10 @@ class OperacionesSql(
 
     @Composable
     override fun realizando(operacion: String): String {
-        return if (operacion.contains("#") || operacion.isBlank()) {
-            ""
+        if (operacion.contains("#") || operacion.isBlank()) {
+            return ""
         } else {
-            queHago(operacion)
+            return queHago(operacion)
         }
 
 
@@ -143,15 +143,15 @@ class OperacionesSql(
         //compruebo al grupo
         // si el grupo es distinto de nulo inserto el grupo
         val existeGrupo = groupService.verificargrupo(grupo)
-        return if (!existeGrupo) {
+        if (!existeGrupo) {
             val grupoNuevo = groupService.crearGrupo(grupo)
             if (grupoNuevo != null) {
-                "Procesado: Añadido el grupo \"${grupoNuevo.grupoDesc}\"."
+                return "Procesado: Añadido el grupo \"${grupoNuevo.grupoDesc}\"."
             } else {
-                ("ERROR al crear  el grupo $grupo")
+                return ("ERROR al crear  el grupo $grupo")
             }
         } else {
-            ("ERROR este grupo ya existe en la base de datos $grupo")
+            return ("ERROR este grupo ya existe en la base de datos $grupo")
         }
     }
 
@@ -167,10 +167,10 @@ class OperacionesSql(
         }
     }
 
-    private fun anadirParticipacion(prCtf: String): String {//-p
+    private fun anadirParticipacion(PrCtf: String): String {//-p
         //funcion comprobada no tocar o modificar
         //esto me devuelve un ctf o un nulo como error
-        val ctf: Ctfs? = comprobarCtfs(prCtf)
+        val ctf: Ctfs? = comprobarCtfs(PrCtf)
         // si el grupo no es nulo y existe actualiza su puntuacion
         if (ctf != null) {
             val grupo = groupService.getById(ctf.grupoId)
@@ -182,8 +182,10 @@ class OperacionesSql(
                     val puntuacionantigua =
                         ctfService.getAll(ctf.ctfdId)?.find { ctf.grupoId == it.grupoId }?.puntuacion ?: 0
                     val ctfActualizado = ctfService.actualizarPuntuacion(ctf)
-                        ?: return ("no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} y ${ctf.puntuacion} a la BBDD")
 
+                    if (ctfActualizado == null) {
+                        return ("no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} y ${ctf.puntuacion} a la BBDD")
+                    }
                     return ("Procesado: Actualizada la participación del grupo" +
                             " \"${grupo.grupoDesc}\" en el CTF ${ctf.ctfdId}. " +
                             "La puntuación cambió de  $puntuacionantigua a ${ctfActualizado.puntuacion} puntos.\n" + asignarMejorCtf(
@@ -195,7 +197,9 @@ class OperacionesSql(
 
                     //esta parte tambien esta correcta
                     val ctfNuevo = ctfService.anadirParticipacion(ctf)
-                        ?: return ("no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} y ${ctf.puntuacion} a la BBDD")
+                    if (ctfNuevo == null) {
+                        return ("no se pudo agregar la participacion de ${ctf.ctfdId}, ${ctf.grupoId} y ${ctf.puntuacion} a la BBDD")
+                    }
                     return (" Procesado: Añadida participación del grupo " +
                             "\"${grupo.grupoDesc}\" en el CTF ${ctfNuevo.ctfdId} con una puntuación de ${ctfNuevo.puntuacion} puntos.\n" + asignarMejorCtf(
                         grupo
@@ -214,12 +218,12 @@ class OperacionesSql(
     private fun crearserie(lista: List<Ctfs>?): String {
         var serie = ""
         if (lista != null)
-            for (i in lista.indices-1) {
+            for (i in 0..lista.size - 1) {
                 val ctf = lista[i]
-                serie += if (i == lista.size - 1) {
-                    " y ${ctf.ctfdId}"
+                if (i == lista.size - 1) {
+                    serie += " y ${ctf.ctfdId}"
                 } else {
-                    "${ctf.ctfdId}, "
+                    serie += "${ctf.ctfdId}, "
                 }
             }
         return serie
@@ -234,7 +238,7 @@ class OperacionesSql(
             val grupoEliminar = groupService.getById(args.toInt())
             if (grupoEliminar != null) {
                 val grupoModificado = groupService.eliminarCtf(grupoEliminar)
-                return if (grupoModificado != null) {
+                if (grupoModificado != null) {
                     //escogo toda la lista de ctf, antes de eliminar
                     val lista = ctfService.getAll(args.toInt())
                     //elimino las participaciones del grupo en al tabla ctf, ME FUNCIONA ESTAS FUNCION NO TOCAR
@@ -244,9 +248,9 @@ class OperacionesSql(
                     //muestro por consola el numero de participaciones eliminada y el grupo
                     val registros = crearserie(lista)
 
-                    ("Procesado: Eliminada el grupo \"${grupoEliminar.grupoDesc}\" y su participación en los CTFs: ${registros}.")
+                    return ("Procesado: Eliminada el grupo \"${grupoEliminar.grupoDesc}\" y su participación en los CTFs: ${registros}.")
                 } else {
-                    ("Error a la hora de eliminar al grupo ${grupoEliminar.grupoDesc}")
+                    return ("Error a la hora de eliminar al grupo ${grupoEliminar.grupoDesc}")
                 }
 
             } else {
@@ -263,10 +267,10 @@ class OperacionesSql(
         val grupoActualizado = groupService.actualizarmejorCtfs(grupo, lista)
         var serie = ""
         return if (grupoActualizado != null) {
-            serie += if (grupoActualizado.mejorPosCTFId == null) {
-                "\nel grupo ${grupoActualizado.grupoDesc} no tiene ninguna participacion despues de eliminar su unica participacion."
+            if (grupoActualizado.mejorPosCTFId == null) {
+                serie += "\nel grupo ${grupoActualizado.grupoDesc} no tiene ninguna participacion despues de eliminar su unica participacion."
             } else {
-                "\nel grupo ${grupoActualizado.grupoDesc} ahora su mejor ctf es ${grupoActualizado.mejorPosCTFId}"
+                serie += "\nel grupo ${grupoActualizado.grupoDesc} ahora su mejor ctf es ${grupoActualizado.mejorPosCTFId}"
             }
             serie
         } else {
@@ -275,11 +279,8 @@ class OperacionesSql(
     }
 
     override fun actualizarTodo() {
-        val lista = groupService.getAll()
-        if ( lista != null){
-            for (i in lista) {
-                asignarMejorCtf(i)
-            }
+        for (i in groupService.getAll()!!) {
+            asignarMejorCtf(i)
         }
     }
 
@@ -294,18 +295,19 @@ class OperacionesSql(
             if (grupo != null && ctfid != null) {
                 //aqui intento eliminar esa participacion
                 groupService.eliminarCtf(grupo)
-                return if (ctfService.eliminarParticipacion(grupo.grupoId, ctfid.ctfdId)) {
+                if (ctfService.eliminarParticipacion(grupo.grupoId, ctfid.ctfdId)) {
                     //si se mete en esta parte del codigo es que ha salid ocorrectamente la transccion
-                    "Procesado: Eliminada participación del grupo \"${grupo.grupoDesc}\"" +
+                    val serie = "Procesado: Eliminada participación del grupo \"${grupo.grupoDesc}\"" +
                             " en el CTF ${ctfid}." + asignarMejorCtf(grupo)
+                    return serie
                 } else {
-                    ("ERROR: participacion no eliminada")
+                    return ("ERROR: participacion no eliminada")
                 }
             } else {
-                return if (ctfid == null) {
-                    ("ERROR: participacion no existe")
+                if (ctfid == null) {
+                    return ("ERROR: participacion no existe")
                 } else {
-                    ("ERROR: grupo no existe")
+                    return ("ERROR: grupo no existe")
                 }
             }
         } catch (e: IndexOutOfBoundsException) {
@@ -318,7 +320,7 @@ class OperacionesSql(
     private fun saberPosicion(lista: List<Ctfs>, ctfdId: Int,grupoId:Int): Int {
         var salio = false
         var contador = 0
-        lista.filter { it.ctfdId == ctfdId }.sortedWith(compareByDescending { it.puntuacion }).forEach {
+        lista.filter { it.ctfdId == ctfdId }.sortedWith(compareByDescending({it.puntuacion})).forEach {
             if (!salio) {
                 contador++
             }
@@ -329,141 +331,135 @@ class OperacionesSql(
         return contador
     }
 
-    private fun mostrarInfoDeUnGrupo(args: String):String{
-        val lista =
-            ctfService.mostrarInformacionGrupo(args.toInt())//esto puedo hacer la comprobacion antes de pasarlo y no tengo que comprobar tanto
-        val listaTodo = ctfService.mostrarInformacionGrupo()
-        if (lista != null && listaTodo != null) {
-            val grupo = groupService.getById(args.toInt())
-            if (grupo != null) {
-                var serie = "Procesado: Listado participación del grupo \"${grupo.grupoDesc}\"" +
-                        "\nGRUPO: ${grupo.grupoId}   ${grupo.grupoDesc}  MEJORCTF: ${grupo.mejorPosCTFId}, Posición: ${
-                            grupo.mejorPosCTFId?.let {
-                                saberPosicion(
-                                    lista,
-                                    it,
-                                    grupo.grupoId
-                                )
-                            }
-                        }, Puntuación: ${lista.find { it.ctfdId == grupo.mejorPosCTFId }?.puntuacion ?: "error"}" +
-                        "\n CTF   | Puntuación | Posición\n" +
-                        "  -----------------------------"
-                lista.forEach {
-                    if (it.grupoId == args.toInt()) {
-                        serie += "\n    ${it.ctfdId} |       ${it.puntuacion}   |        ${
-                            saberPosicion(
-                                listaTodo,
-                                it.ctfdId,
-                                it.grupoId
-                            )
-                        }\n"
-                    }
-
-                }
-                return serie
-            } else {
-                return ("ERROR: el grupo no existe")
-            }
-        } else {
-            return ("este grupo con id: $args, no tiene ninguna participacion o no existe ")
-        }
-    }
-
-    private fun mostrarTodosLaInfoDeUnGrupo():String{
-        var ctfactual= 0
-        val lista =
-            ctfService.getAll()//esto puedo hacer la comprobacion antes de pasarlo y no tengo que comprobar tanto
-        if (lista != null) {
-            val grupo = groupService.getAll()
-            if (grupo != null) {
-                var serie = ""
-                lista.sortedWith(compareBy { it.ctfdId }).forEach {
-                    if(ctfactual != it.ctfdId){
-                        ctfactual = it.ctfdId
-                        serie += "\nequipo | CTF   | Puntuación | Posición\n"
-                        serie += "-------------------------------\n"
-                        serie += "CTF: $ctfactual"
-                    }
-                    serie += "\n*  ${it.grupoId} |  ${it.ctfdId} |       ${it.puntuacion}   |        ${
-                        saberPosicion(
-                            lista,
-                            it.ctfdId,
-                            it.grupoId
-                        )
-                    }\n"
-                }
-                return serie
-            } else {
-                return ("ERROR: al recoger todos los datos")
-            }
-        } else {
-            return ("ERROR: al recoger todos los datos")
-        }
-    }
-
     private fun mostrarInformacionGrupoParticipacion(args: String): String {
         //5	-l <grupoId>	Si <grupoId>
         // esta presente muestra la información del grupo <grupoId> y sus participaciones.
         // Si el grupo no está presente muestra la información de todos los grupos.
 
-        return try {
+        try {
             if (args != "null") {
-                mostrarInfoDeUnGrupo(args)
+                val lista =
+                    ctfService.mostrarInformacionGrupo(args.toInt())//esto puedo hacer la comprobacion antes de pasarlo y no tengo que comprobar tanto
+                if (lista != null) {
+                    val grupo = groupService.getById(args.toInt())
+                    if (grupo != null) {
+                        var serie = "Procesado: Listado participación del grupo \"${grupo.grupoDesc}\"" +
+                                "\nGRUPO: ${grupo.grupoId}   ${grupo.grupoDesc}  MEJORCTF: ${grupo.mejorPosCTFId}, Posición: ${
+                                    grupo.mejorPosCTFId?.let {
+                                        saberPosicion(
+                                            lista,
+                                            it,
+                                            grupo.grupoId
+                                        )
+                                    }
+                                }, Puntuación: ${lista.find { it.ctfdId == grupo.mejorPosCTFId }?.puntuacion ?: "error"}" +
+                                "\n CTF   | Puntuación | Posición\n" +
+                                "  -----------------------------"
+                        lista.forEach {
+                            if (it.grupoId == args.toInt()) {
+                                serie += "\n    ${it.ctfdId} |       ${it.puntuacion}   |        ${
+                                    saberPosicion(
+                                        lista,
+                                        it.ctfdId,
+                                        it.grupoId
+                                    )
+                                }\n"
+                            }
+
+                        }
+                        return serie
+                    } else {
+                        return ("ERROR: el grupo no existe")
+                    }
+                } else {
+                    return ("este grupo con id: $args, no tiene ninguna participacion o no existe ")
+                }
             } else {
-                mostrarTodosLaInfoDeUnGrupo()
+                var ctfactual= 0
+                val lista =
+                    ctfService.getAll()//esto puedo hacer la comprobacion antes de pasarlo y no tengo que comprobar tanto
+                if (lista != null) {
+                    val grupo = groupService.getAll()
+                    if (grupo != null) {
+                        var serie = ""
+                        lista.sortedWith(compareBy({it.ctfdId})).forEach {
+                            if(ctfactual != it.ctfdId){
+                                ctfactual = it.ctfdId
+                                serie += "\nequipo | CTF   | Puntuación | Posición\n"
+                                serie += "-------------------------------\n"
+                                serie += "CTF: $ctfactual"
+                            }
+                            serie += "\n*  ${it.grupoId} |  ${it.ctfdId} |       ${it.puntuacion}   |        ${
+                                saberPosicion(
+                                    lista,
+                                    it.ctfdId,
+                                    it.grupoId
+                                )
+                            }\n"
+                        }
+                        return serie
+                    } else {
+                        return ("ERROR: al recoger todos los datos")
+                    }
+                } else {
+                    return ("ERROR: al recoger todos los datos")
+                }
             }
         } catch (e: NumberFormatException) {
-            ("ERROR, el parametro -l debe de ir acompañado cn un numero entero")
+            return ("ERROR, el parametro -l debe de ir acompañado cn un numero entero")
         }
 
     }
 
-    private fun mostraInfoDeUnCtfEntero(
-        args: String,
-        ctf: List<Ctfs>,
-        diccionario: MutableMap<String, Int>,
-        grupos: List<Grupos>
-    ):String {
-        ctf.forEach { itCtf ->
-            diccionario[grupos.find { grupo -> grupo.grupoId == itCtf.grupoId }?.grupoDesc ?: ""] =
-                itCtf.puntuacion
-        }
-        val diccionarioOrdenado = diccionario.toSortedMap(compareByDescending { it })
-        var primeraVez = true
-        var serie = ""
-        for (i in diccionarioOrdenado) {
-            if (primeraVez) {
-                primeraVez = false
-                serie +=
-                    "GRUPO GANADOR: ${i.key}  Mejor puntuacion: ${i.value} Total participants: ${diccionarioOrdenado.size}\n" +
-                            "GRUPO   | Puntuación\n" +
-                            "--------------------"
-            }
-            serie += "\n${i.key} | ${i.value}"
-        }
-        if (diccionarioOrdenado.isEmpty()) {
-            serie = "No se encontraron registros del ctfid $args"
-        }
-        return serie
-    }
     private fun mostrarInformacionDeUnCtf(args: String): String {
         //comprobar
         try {
             val grupos = groupService.getAll()
             val ctf = ctfService.escogerListaCtfOParteDeCtf(args.toInt())
             val diccionario = emptyMap<String, Int>().toMutableMap()
-            return if (grupos != null && ctf != null) {
-                mostraInfoDeUnCtfEntero(args,ctf,diccionario,grupos)
+            if (grupos != null && ctf != null) {
+                ctf.forEach { itCtf ->
+                    diccionario[grupos.find { grupo -> grupo.grupoId == itCtf.grupoId }?.grupoDesc ?: ""] =
+                        itCtf.puntuacion
+                }
+                val diccionarioOrdenado = diccionario.toSortedMap(compareByDescending { it })
+                var primeraVez = true
+                var serie = ""
+                for (i in diccionarioOrdenado) {
+                    if (primeraVez) {
+                        primeraVez = false
+                        serie +=
+                            "GRUPO GANADOR: ${i.key}  Mejor puntuacion: ${i.value} Total participants: ${diccionarioOrdenado.size}\n" +
+                                    "GRUPO   | Puntuación\n" +
+                                    "--------------------"
+                    }
+                    serie += "\n${i.key} | ${i.value}"
+                }
+                if (diccionarioOrdenado.isEmpty()) {
+                    serie = "No se encontraron registros del ctfid $args"
+                }
+                return serie
             } else {
                 if (grupos == null) {
-                    ("ERROR no se pudo acceder a la tabla grupos ")
+                    return ("ERROR no se pudo acceder a la tabla grupos ")
                 } else {
-                    ("ERROR no se pudo acceder a la tabla ctfs ")
+                    return ("ERROR no se pudo acceder a la tabla ctfs ")
                 }
             }
         } catch (e: NumberFormatException) {
             return "Error fatal: has introducido mal los parametros"
         }
+
+
+        //lo que hago aqui es retorna una lista donde tengo que sacar los datos de tipo asi
+        //solucionar
+        //Procesado: Listado participación en el CTF "1"
+        //  GRUPO GANADOR: 1DAM-G1  Mejor puntuación: 90 Total participants: 3
+//          GRUPO   | Puntuación
+//          --------------------
+        //  1DAM-G2 |       90
+        //  1DAM-G1 |       80
+        //  1DAM-G3 |       70
     }
 
 

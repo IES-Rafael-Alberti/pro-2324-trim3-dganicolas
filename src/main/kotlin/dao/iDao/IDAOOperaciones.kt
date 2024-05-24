@@ -1,6 +1,6 @@
-package dao.iDao
+package DAO.IDAO
 
-import ui.iInterfazGrafica.IinterfazGrafica
+import ui.Interfaz.IinterfazGrafica
 import androidx.compose.runtime.Composable
 import service.ICtfsService
 import service.IGruposService

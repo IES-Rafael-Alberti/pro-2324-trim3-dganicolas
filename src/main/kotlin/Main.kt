@@ -1,5 +1,5 @@
-import daoFactory.DaoFactory
-import ui.interfaz.InterfazGrafica
+
+import DAOFactory.DaoFactory
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -12,26 +12,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.application
 import consola.Consola
 import gestorFichero.GestorFicheros
-import ui.iInterfazGrafica.IinterfazGrafica
 import service.CtfService
 import service.GroupService
 import service.ICtfsService
 import service.IGruposService
+import ui.Interfaz.IinterfazGrafica
+import ui.interfaz.InterfazGrafica
+import ui.viewModel.ViewModel
 import java.io.File
-
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
-
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
-        }
-    }
-}
 
 /**
  * notas:
@@ -69,7 +57,8 @@ fun main(args: Array<String>) = application {
         val fuenteDeDatoCtfs = daoFactory.asignarDaoCtf(opcion)
         val ctfService: ICtfsService = CtfService(fuenteDeDatoCtfs)
         val groupService: IGruposService = GroupService(fuenteDeDatoGroup)
-        val interfazGrafica: IinterfazGrafica = InterfazGrafica(groupService, ctfService, gestorFicheros)
+        val viewModel = ViewModel(groupService,ctfService,gestorFicheros)
+        val interfazGrafica: IinterfazGrafica = InterfazGrafica(viewModel)
         val operaciones = daoFactory.asignarDaoOperaciones(opcion,groupService,ctfService,interfazGrafica)
         val argumentos = operaciones.comprobarArgumentos(args)
         operaciones.queOpcionEs(argumentos)
