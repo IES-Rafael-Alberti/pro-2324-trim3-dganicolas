@@ -1,58 +1,24 @@
 package ui.viewModel
 
-import androidx.compose.runtime.mutableStateOf
-import dataclassEntity.Ctfs
+import androidx.compose.runtime.MutableState
+
 import dataclassEntity.Grupos
-import java.io.File
+import service.ICtfsService
+
 
 interface IViewModel {
-
-    val _lista
-    val lista
-
-    val _texto
-    val texto
-
-    private val _textoExportar = mutableStateOf("Exportar")
-    val textoExportar
-
-    private val _estado
-    val estado
-
-    fun cambiartexto(texto:String)
-
-    fun cambiarEstado(estado:Boolean)
-
+    val service: ICtfsService
+    val _lista: MutableState<List<Grupos>?>
+    val lista: MutableState<List<Grupos>?>
+    val _texto: MutableState<String>
+    val texto: MutableState<String>
+    val _textoExportar: MutableState<String>
+    val textoExportar: MutableState<String>
+    val _estado: MutableState<Boolean>
+    val estado: MutableState<Boolean>
+    fun cambiartexto(texto: String)
+    fun cambiarEstado(estado: Boolean)
     fun cogertodo()
-
-    fun cogerungrupo(){
-        _lista.value = if (texto.value.toIntOrNull() != null){
-            val grupo = serviceGroup.getById(texto.value.toInt())
-            if(grupo != null){
-                listOf(grupo)
-            }else{
-                listOf(Grupos(404,"ERROR: Grupo no existe", 404))
-            }
-
-        }else{
-            listOf(Grupos(404,"ESO NO ES UN NUMERO", 404))
-        }
-    }
-
-    fun exportar(){
-        val listaAexporta = mutableListOf<String>()
-        var ctfid:Int? = null
-        var contador = 1
-        service.getAll()
-            ?.sortedWith(compareBy<Ctfs> {it.ctfdId  }.thenBy { it.grupoId }.thenBy { it.puntuacion })
-            ?.forEach {
-                if(ctfid!= it.ctfdId){
-                    ctfid = it.ctfdId
-                    contador = 1
-                    listaAexporta.add("CTF: $ctfid")
-                }
-                listaAexporta.add("$contador. ${serviceGroup.getById(it.grupoId)?.grupoDesc} (${it.puntuacion} puntos)")
-            }
-        fichero.escribir(File("src/main/resources/ctfs.txt"),listaAexporta)
-    }
+    fun cogerungrupo()
+    fun exportar()
 }

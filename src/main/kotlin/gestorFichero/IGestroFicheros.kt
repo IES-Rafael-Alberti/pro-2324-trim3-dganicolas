@@ -2,6 +2,7 @@ package gestorFichero
 
 import java.io.File
 
+//copia y pega de actividades anteriores
 interface IGestorFicheros {
     /**
      * Escribe información en un fichero especificado. Si el fichero no existe, no se crea automáticamente.

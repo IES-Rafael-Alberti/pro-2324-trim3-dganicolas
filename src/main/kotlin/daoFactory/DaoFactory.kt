@@ -23,34 +23,37 @@ import service.IGruposService
 
 class DaoFactory:IDaoFactory {
     override fun asignarDaoGroup(opcion:String): IDaoGroup {
+        //si la opcion que me llega es una de esta instancio un dao de grupos su dicha clase
         return when (opcion) {
-            //implementar un dao factory
             "SQL" -> SqlDaoGroup(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI))
             "XML" -> XmlGruposDao()
             "JSON" -> JsonGruposDao()
             "TXT" -> TxtGruposDao()
+            //lo tengo montado de tal manera que nunca llegara a este else, pero lo tengo que poner
             else -> SqlDaoGroup(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI))
         }
     }
 
     override fun asignarDaoCtf(opcion: String): IDaoCtf {
         return when (opcion) {
-            //implementar un dao factory
+            //si la opcion que me llega es una de esta instancio un dao de ctf su dicha clase
             "SQL" -> SqlDaoCtf(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI))
             "XML" -> XmlCtfDao()
             "JSON" -> JsonCtfDao()
             "TXT" -> TxtCtfDao()
+            //lo tengo montado de tal manera que nunca llegara a este else, pero lo tengo que poner
             else -> SqlDaoCtf(DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI))
         }
     }
 
     override fun asignarDaoOperaciones(opcion: String, daogrupo: IGruposService, daoctf: ICtfsService, interfazGrafica: IinterfazGrafica): IDAOOperaciones {
         return when (opcion) {
-            //implementar un dao factory
+            //si la opcion que me llega es una de esta instancio un dao de operaciones su dicha clase
             "SQL" -> OperacionesSql(daoctf,daogrupo,interfazGrafica)
             "XML" -> OperacionesXml(daoctf,daogrupo,interfazGrafica)
             "JSON" -> OperacionesJSON(daoctf,daogrupo,interfazGrafica)
             "TXT" -> OperacionesTxt(daoctf,daogrupo,interfazGrafica)
+            //lo tengo montado de tal manera que nunca llegara a este else, pero lo tengo que poner
             else -> OperacionesSql(daoctf,daogrupo,interfazGrafica)
 
         }
