@@ -10,7 +10,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(18)
 }
 
 group = "es.iesra.ctfm"
@@ -30,6 +30,14 @@ dependencies {
     implementation(compose.desktop.currentOs)
     testImplementation(kotlin("test"))
 
+    //DCS: Base de datos H2
+    implementation("com.h2database:h2:2.2.224")
+
+//DCS: HikariCP
+    implementation ("com.zaxxer:HikariCP:5.0.0")
+
+//DCS: Arregla el warning SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+    implementation("org.slf4j:slf4j-nop:2.0.6")
 }
 
 tasks.test {
@@ -37,7 +45,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "18"
 }
 
 tasks.jar {
@@ -52,7 +60,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "2324_PRO_u7u9_CTFM_pe"
+            packageName = "un9pe"
             packageVersion = "1.0.0"
         }
     }

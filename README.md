@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/MPv5a-qB)
 # Prueba específica unidad 7 y 9
 
 > Se evaluará el RA7 y RA9
@@ -174,9 +175,9 @@ insert into grupos(grupoid, grupodesc) values(6, '1DAW-G3');
 
 a. Realizar el programa haciendo uso de la base de datos H2. No olvidar configurar adecuadamente el archivo `build.gradle`.
 
-b. Poder ejecutar las operaciones, haciendo uso de los objetos DAO necesarios que accedan a la BBDD h2. Recuerda que los objetos DAO deben ser inyectados en la clase servicio. Y los servicios deben inyectarse en la clase principal que se encargará de procesar las operaciones.
+b. Poder ejecutar las operaciones, haciendo uso de los objetos dao necesarios que accedan a la BBDD h2. Recuerda que los objetos dao deben ser inyectados en la clase servicio. Y los servicios deben inyectarse en la clase principal que se encargará de procesar las operaciones.
 
-c. Utilizar una Abstract Factory para poder cargar los datos de DAOs que tengan distintas fuentes de datos. En principio solo se utilizará una fuente de datos, en nuestro caso SQL, pero se quiere tener la posibilidad de poder cambiar de fuente de datos en un futuro a JSON y XML. Existirá una clase abstracta DAOFactory, que contendrá los métodos necesarios para obtener los DAOs necesarios. Y una clase concreta SQLDAOFactory que implementará los métodos de la clase abstracta DAOFactory. Para configurar la fuente de datos se leerá de un fichero de configuración, que contendrá el tipo de fuente de datos a utilizar. Un ejemplo del fichero puede ser el siguiente:
+c. Utilizar una Abstract Factory para poder cargar los datos de DAOs que tengan distintas fuentes de datos. En principio solo se utilizará una fuente de datos, en nuestro caso SQL, pero se quiere tener la posibilidad de poder cambiar de fuente de datos en un futuro a JSON y XML. Existirá una clase abstracta daoFactory, que contendrá los métodos necesarios para obtener los DAOs necesarios. Y una clase concreta SQLDAOFactory que implementará los métodos de la clase abstracta daoFactory. Para configurar la fuente de datos se leerá de un fichero de configuración, que contendrá el tipo de fuente de datos a utilizar. Un ejemplo del fichero puede ser el siguiente:
 
     ```
     # Fichero de configuración
